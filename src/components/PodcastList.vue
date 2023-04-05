@@ -9,7 +9,7 @@
         @play="playPodcast"
       />
     </ul>
-    <MediaPlayer :podcast="selectedPodcast" :podcastList="podcasts" />
+    <MediaPlayer :podcast="selectedPodcast" :podcastList="podcasts" @play="playPodcast" />
   </div>
 </template>
 
