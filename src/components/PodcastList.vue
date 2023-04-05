@@ -9,10 +9,9 @@
         @play="playPodcast"
       />
     </ul>
-    <MediaPlayer v-if="currentPodcast" :podcast="currentPodcast" />
+    <MediaPlayer :podcast="selectedPodcast" :podcastList="podcasts" />
   </div>
 </template>
-
 
 <script>
 import PodcastItem from "./PodcastItem.vue";
@@ -22,31 +21,25 @@ export default {
   components: { PodcastItem, MediaPlayer },
   data() {
     return {
-     podcasts: [
-  {
-    id: 1,
-    title: "Checkie Brown - Roadtrip",
-    audioFilePath: "/audio/Checkie Brown - Roadtrip (CB 37).mp3",
-  },
-  {
-    id: 2,
-    title: "The Immaculates - Dogbite",
-    audioFilePath: "/audio/The Immaculates - Dogbite.mp3",
-  },
-  // Add more podcast samples as needed
-],
-
-      currentPodcast: null,
+      podcasts: [
+        {
+          id: 1,
+          title: "Checkie Brown - Roadtrip",
+          audioFilePath: "/audio/Checkie Brown - Roadtrip (CB 37).mp3",
+        },
+        {
+          id: 2,
+          title: "The Immaculates - Dogbite",
+          audioFilePath: "/audio/The Immaculates - Dogbite.mp3",
+        },
+        // Add more podcast samples as needed
+      ],
+      selectedPodcast: null,
     };
-  },
-  computed: {
-    isPlayerVisible() {
-      return this.currentPodcast !== null;
-    },
   },
   methods: {
     playPodcast(podcast) {
-      this.currentPodcast = podcast;
+      this.selectedPodcast = podcast;
     },
   },
 };
