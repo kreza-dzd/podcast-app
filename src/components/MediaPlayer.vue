@@ -1,13 +1,16 @@
 <template>
-  <div v-if="podcast" class="media-player">
+<div class="media-player">
+
+  <div v-if="podcast">
     <h3>Now Playing: {{ podcast.title }}</h3>
-    <audio ref="audioElement" :src="podcast.audioFilePath" @timeupdate="updateProgress"></audio>
-    <div class="controls">
-      <button @click="togglePlay">{{ isPlaying ? 'Pause' : 'Play' }}</button>
-      <input type="range" min="0" :max="duration" v-model="currentTime" @input="seek">
-      <div class="time">{{ formatTime(currentTime) }} / {{ formatTime(duration) }}</div>
+    <div class="button-container">
+    <button class="button" @click="previous">Prev</button>
+    <button class="button" @click="next">Next</button>
     </div>
+    <audio ref="audio" :src="podcast.audioFilePath" controls></audio>
   </div>
+
+</div>
 </template>
 
 <script>
@@ -18,34 +21,29 @@ export default {
       required: false,
       default: null,
     },
-  },
-  data() {
-    return {
-      isPlaying: false,
-      currentTime: 0,
-      duration: 0,
-    };
+    podcastList: {
+      type: Array,
+      required: true,
+    },
   },
   methods: {
-    togglePlay() {
-      if (this.isPlaying) {
-        this.$refs.audioElement.pause();
-      } else {
-        this.$refs.audioElement.play();
+    previous() {
+      const currentIndex = this.podcastList.findIndex(
+        (p) => p.id === this.podcast.id
+      );
+
+      if (currentIndex > 0) {
+        this.$emit("play", this.podcastList[currentIndex - 1]);
       }
-      this.isPlaying = !this.isPlaying;
     },
-    updateProgress() {
-      this.currentTime = this.$refs.audioElement.currentTime;
-      this.duration = this.$refs.audioElement.duration;
-    },
-    seek() {
-      this.$refs.audioElement.currentTime = this.currentTime;
-    },
-    formatTime(time) {
-      const minutes = Math.floor(time / 60);
-      const seconds = Math.floor(time % 60);
-      return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    next() {
+      const currentIndex = this.podcastList.findIndex(
+        (p) => p.id === this.podcast.id
+      );
+
+      if (currentIndex < this.podcastList.length - 1) {
+        this.$emit("play", this.podcastList[currentIndex + 1]);
+      }
     },
   },
 };
@@ -53,7 +51,9 @@ export default {
 
 <style scoped>
 .media-player {
-  /* Add your media player container styles here */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .media-player h3 {
@@ -80,6 +80,25 @@ input[type="range"] {
 
 .time {
  
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  height: 50px;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: blueviolet;
+  color: aquamarine;
+  display: inline;
+
 }
 
 </style>
