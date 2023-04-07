@@ -56,6 +56,8 @@ export default {
       );
 
       if (currentIndex > 0) {
+        this.$refs.audio.pause();
+        this.isPlaying = false;
         this.$emit("play", this.podcastList[currentIndex - 1]);
       }
     },
@@ -65,6 +67,8 @@ export default {
       );
 
       if (currentIndex < this.podcastList.length - 1) {
+        this.$refs.audio.pause();
+        this.isPlaying = false;
         this.$emit("play", this.podcastList[currentIndex + 1]);
       }
     },
@@ -140,6 +144,7 @@ export default {
   background-color: blueviolet;
   color: aquamarine;
   display: inline;
+  font-size: 12px;
 }
 
 .play-pause {
