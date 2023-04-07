@@ -4,6 +4,9 @@
       <!-- Add your sidebar content here -->
     </div>
     <main>
+      <header>
+        <h1 class="app-title">My App</h1>
+      </header>
       <PodcastList />
     </main>
   </div>
@@ -20,5 +23,13 @@ export default {
 </script>
 
 <style>
-/* Add your global styles here, including layout, colors, typography, etc. */
+
+.app-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin: 20px 0;
+}
+
 </style>
