@@ -16,7 +16,6 @@
 <script>
 import PodcastItem from "./PodcastItem.vue";
 import MediaPlayer from "./MediaPlayer.vue";
-
 export default {
   components: { PodcastItem, MediaPlayer },
   data() {
@@ -47,7 +46,6 @@ export default {
           title: "Wolf Asylum - Koord",
           audioFilePath: "/audio/Wolf Asylum - Koord.mp3",
         },
-
       ],
       selectedPodcast: null,
     };
