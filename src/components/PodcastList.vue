@@ -32,7 +32,22 @@ export default {
           title: "The Immaculates - Dogbite",
           audioFilePath: "/audio/The Immaculates - Dogbite.mp3",
         },
-        // Add more podcast samples as needed
+        {
+          id: 3,
+          title: "Choklate -Incredible (Live @ KEXP)",
+          audioFilePath: "/audio/Choklate - Incredible (Live @ KEXP).mp3",
+        },
+        {
+          id: 4,
+          title: "Eastern Blokhedz - Live at Barbés",
+          audioFilePath: "/audio/Eastern Blokhedz - Live at Barbés, 12_10_2016.mp3",
+        },
+        {
+          id: 5,
+          title: "Wolf Asylum - Koord",
+          audioFilePath: "/audio/Wolf Asylum - Koord.mp3",
+        },
+
       ],
       selectedPodcast: null,
     };
