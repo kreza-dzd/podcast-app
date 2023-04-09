@@ -3,7 +3,7 @@
 
     <main>
    
-      <PodcastList />
+
 
   <div class="featured-container">
   <h2 class="section-title">Featured</h2>
@@ -32,7 +32,7 @@
         <div class="box-wrapper">
           <div class="box-11"></div>
           <div class="box-12"></div>
-          <div class="box-12"></div>
+          <div class="box-13"></div>
           <div class="box-14"></div>
           <div class="box-15"></div>
         </div>
@@ -44,12 +44,11 @@
 
 <script>
 
-    import PodcastList from "../components/PodcastList.vue";
+ 
 
 export default {
-  components: {
-    PodcastList,
-  },
+
+
   data() {
     return {
       showSidebar: false,
