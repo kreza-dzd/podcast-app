@@ -25,7 +25,9 @@
          </router-link>
         </li>
         <li>
-          <a href="#"><font-awesome-icon :icon="['fas', 'podcast']" /> Podcast</a>
+          <router-link to="/music" @click="toggleSidebar">
+              <a href="#"><font-awesome-icon :icon="['fas', 'podcast']" /> Podcast</a>
+        </router-link>
         </li>
         <li>
           <a href="#"><font-awesome-icon icon="book" /> Library</a>
