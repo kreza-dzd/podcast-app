@@ -1,6 +1,29 @@
 <template>
  
     <button @click="requestTracks">Search for a track</button>
+
+     <div>
+    <table>
+      <thead>
+        <tr>
+          <th>Artist</th>
+          <th>Track</th>
+          <th>Duration</th>
+          <th>Album</th>
+          <th>Album Image</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, index) in state.tracks" :key="index" :class="{ 'even-row': index % 2 === 1 }">
+          <td>{{ item.artists[0].name }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ formatDuration(item.duration_ms) }}</td>
+          <td>{{ item.album.name }}</td>
+          <td><img v-if="item.album.images[0]" :src="item.album.images[0].url" :alt="item.album" /></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
     
 
 </template>
@@ -55,5 +78,31 @@ const requestTracks = ( async () => {
     })
  
 })
+
+const formatDuration = (duration) => {
+  const seconds = Math.floor((duration / 1000) % 60);
+  const minutes = Math.floor((duration / (1000 * 60)) % 60);
+
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+};
   
 </script>
+
+<style scoped>
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+img {
+  width: 50px;
+  height: 50px;
+}
+</style>
