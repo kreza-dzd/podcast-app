@@ -15,10 +15,8 @@
 
   
   <script>
-
 import PodcastItem from '@/components/PodcastItem.vue';
 import MediaPlayer from '@/components/MediaPlayer.vue';
-
   export default {
     name: 'MusicView',
     components: { PodcastItem, MediaPlayer },
@@ -61,4 +59,3 @@ import MediaPlayer from '@/components/MediaPlayer.vue';
   },
   };
   </script>
-  
