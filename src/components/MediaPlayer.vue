@@ -16,9 +16,9 @@
         @change="seek"
         class="progress-bar"
       />
-      <audio
+     <audio
         ref="audio"
-        :src="podcast.audioFilePath"
+        :src="audioPreviewUrl"
         @play="isPlaying = true"
         @pause="isPlaying = false"
         @loadedmetadata="duration = $event.target.duration"
@@ -27,6 +27,7 @@
     </div>
   </div>
 </template>
+
 
 
 <script>
@@ -39,7 +40,13 @@ export default {
     },
     podcastList: {
       type: Array,
-      required: true,
+      required: false,
+      default: () => [],
+    },
+    audioPreviewUrl: {
+      type: String,
+      required: false,
+      default: "",
     },
   },
   data() {
@@ -47,10 +54,13 @@ export default {
       isPlaying: false,
       duration: 0,
       currentTime: 0,
+      previewDuration: 30, // 30-second preview
     };
   },
   methods: {
     previous() {
+      if (!this.podcast || !this.podcastList.length) return;
+
       const currentIndex = this.podcastList.findIndex(
         (p) => p.id === this.podcast.id
       );
@@ -62,6 +72,8 @@ export default {
       }
     },
     next() {
+      if (!this.podcast || !this.podcastList.length) return;
+
       const currentIndex = this.podcastList.findIndex(
         (p) => p.id === this.podcast.id
       );
@@ -79,17 +91,38 @@ export default {
         this.$refs.audio.pause();
       }
     },
-      updateTime(event) {
-    this.currentTime = event.target.currentTime;
+    updateTime(event) {
+      this.currentTime = event.target.currentTime;
+    },
+    seek() {
+      this.$refs.audio.currentTime = this.currentTime;
+    },
+    playPreview() {
+      if (this.$refs.audio) {
+        this.$refs.audio.currentTime = 0;
+        this.$refs.audio.play();
+        setTimeout(() => {
+          this.$refs.audio.pause();
+          this.isPlaying = false;
+        }, this.previewDuration * 1000);
+      }
+    },
+    handleAudioEnded() {
+      this.isPlaying = false;
+    },
   },
-  seek() {
-    this.$refs.audio.currentTime = this.currentTime;
-  },
+  watch: {
+    audioPreviewUrl() {
+      this.$nextTick(() => {
+        this.playPreview();
+      });
+    },
   },
 };
 </script>
 
-<style scoped>
+
+<style>
 .media-player {
   display: flex;
   justify-content: center;
