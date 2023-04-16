@@ -41,23 +41,31 @@
     <main>
       <router-view></router-view>
     </main>
-    <LetsGo/>
+    <LetsGo :on-play-preview="setPreviewUrl"/>
+    <MediaPlayer :podcast="podcast" :audio-preview-url="audioPreviewUrl" />
   </div>
 </template>
 
 <script>
 import LetsGo from '@/components/LetsGo.vue';
+import MediaPlayer from "@/components/MediaPlayer.vue";
+
 
 export default {
-   components: { LetsGo },
+   components: { LetsGo, MediaPlayer },
   data() {
     return {
       showSidebar: false,
+      previewUrl: "",
+       podcastList: []
     };
   },
   methods: {
     toggleSidebar() {
       this.showSidebar = !this.showSidebar;
+    },
+    setPreviewUrl(url) {
+      this.previewUrl = url;
     },
   },
 };
