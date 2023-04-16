@@ -41,11 +41,15 @@
     <main>
       <router-view></router-view>
     </main>
+    <LetsGo/>
   </div>
 </template>
 
 <script>
+import LetsGo from '@/components/LetsGo.vue';
+
 export default {
+   components: { LetsGo },
   data() {
     return {
       showSidebar: false,
