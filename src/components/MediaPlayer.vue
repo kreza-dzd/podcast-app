@@ -60,11 +60,9 @@ export default {
   methods: {
     previous() {
       if (!this.podcast || !this.podcastList.length) return;
-
       const currentIndex = this.podcastList.findIndex(
         (p) => p.id === this.podcast.id
       );
-
       if (currentIndex > 0) {
         this.$refs.audio.pause();
         this.isPlaying = false;
@@ -73,11 +71,9 @@ export default {
     },
     next() {
       if (!this.podcast || !this.podcastList.length) return;
-
       const currentIndex = this.podcastList.findIndex(
         (p) => p.id === this.podcast.id
       );
-
       if (currentIndex < this.podcastList.length - 1) {
         this.$refs.audio.pause();
         this.isPlaying = false;
@@ -128,20 +124,17 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
 .media-player h3 {
   font-size: 20px;
   font-weight: 400;
   color: #333;
   margin-top: 20px;
 }
-
 .controls {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
 .progress-bar {
   width: 100%;
   margin-top: 10px;
@@ -151,7 +144,6 @@ export default {
   border-radius: 5px;
   outline: none;
 }
-
 .progress-bar::-webkit-slider-thumb {
   appearance: none;
   width: 15px;
@@ -160,13 +152,11 @@ export default {
   border-radius: 50%;
   cursor: pointer;
 }
-
 .button-container {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
 .button {
   height: 50px;
   width: 50px;
@@ -179,7 +169,6 @@ export default {
   display: inline;
   font-size: 12px;
 }
-
 .play-pause {
   height: 50px;
   width: 50px;
