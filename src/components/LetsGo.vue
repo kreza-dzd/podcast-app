@@ -13,10 +13,10 @@
       </thead>
       <tbody>
         <tr
-          v-for="(item, index) in state.tracks"
-          :key="index"
-          :class="{ 'even-row': index % 2 === 1 }"
-          @click="setPreviewUrl(item.preview_url)"
+         v-for="(item, index) in state.tracks"
+        :key="index"
+        :class="{ 'even-row': index % 2 === 1 }"
+        @click="$emit('on-play-preview', item.preview_url, item)"
         >
           <td>{{ item.artists[0].name }}</td>
           <td>{{ item.name }}</td>
@@ -32,24 +32,19 @@
         </tr>
       </tbody>
     </table>
-    <audio ref="audioPlayer" controls></audio>
+
   </div>
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive } from 'vue';
 const axios = require('axios');
-
 const clientId = '17e41028c79e4f128a873410a112bd0e';
 const clientSecret = 'de2b9acdd949438588e2a21958897c3f';
-
 const encodedAuth = window.btoa(`${clientId}:${clientSecret}`);
-
 const state = reactive({
   tracks: [],
 });
-
-const previewUrl = ref('');
 
 const requestTracks = async () => {
   await axios
@@ -67,7 +62,6 @@ const requestTracks = async () => {
     )
     .then((response) => {
       const accessToken = response.data.access_token;
-
       axios
         .get('https://api.spotify.com/v1/search', {
           headers: {
@@ -90,19 +84,10 @@ const requestTracks = async () => {
       console.log(error);
     });
 };
-
 const formatDuration = (duration) => {
   const seconds = Math.floor((duration / 1000) % 60);
   const minutes = Math.floor((duration / (1000 * 60)) % 60);
-
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-};
-
-const setPreviewUrl = (url) => {
-  previewUrl.value = url;
-  const audioPlayer = document.querySelector('audio');
-  audioPlayer.src = url;
-  audioPlayer.play();
 };
 
 </script>
@@ -122,14 +107,12 @@ table {
   width: 100%;
   border-collapse: collapse;
 }
-
 th,
 td {
   padding: 8px;
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
-
 img {
   width: 50px;
   height: 50px;
