@@ -1,6 +1,7 @@
 <template>
   <div>
     <button @click="requestTracks">Search for a track</button>
+
     <table>
       <thead>
         <tr>
@@ -37,13 +38,17 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { defineProps,reactive} from 'vue';
 const axios = require('axios');
 const clientId = '17e41028c79e4f128a873410a112bd0e';
 const clientSecret = 'de2b9acdd949438588e2a21958897c3f';
 const encodedAuth = window.btoa(`${clientId}:${clientSecret}`);
 const state = reactive({
   tracks: [],
+});
+
+const props = defineProps({
+  searchQuery: String,
 });
 
 const requestTracks = async () => {
@@ -68,7 +73,7 @@ const requestTracks = async () => {
             Authorization: `Bearer ${accessToken}`,
           },
           params: {
-            q: 'blue',
+            q: props.searchQuery,
             type: 'track',
           },
         })
