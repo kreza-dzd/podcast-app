@@ -13,7 +13,10 @@
      <img src="./assets/CD.jpg" alt="User Profile" />
       </div>
        <div class="search-container">
-        <input type="text" placeholder="Search" />
+      <input type="text" placeholder="Search" v-model="searchQuery" />
+     <LetsGo ref="letsgoComponent" @on-play-preview="setPreviewUrl" :search-query="searchQuery" />
+
+
       </div>
     </header>
     <div class="sidebar" :class="{ active: showSidebar }">
@@ -41,7 +44,6 @@
     <main>
       <router-view></router-view>
     </main>
-    <LetsGo @on-play-preview="setPreviewUrl" />
     <MediaPlayer :podcast="podcast" :audio-preview-url="audioPreviewUrl" />
   </div>
 </template>
@@ -57,6 +59,7 @@ export default {
        previewUrl: "",
        podcast: null,
        audioPreviewUrl: "",
+       searchQuery: "",
        podcastList: []
     };
   },
@@ -68,6 +71,9 @@ export default {
     this.audioPreviewUrl = url;
     this.podcast = podcast;
     },
+    requestTracks() {
+    this.$refs.letsgoComponent.$emit("request-tracks");
+  },
   },
 };
 </script>
