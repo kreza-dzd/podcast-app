@@ -90,6 +90,11 @@ export default {
     updateTime(event) {
       this.currentTime = event.target.currentTime;
     },
+      formatDuration(duration) {
+    const seconds = Math.floor((duration / 1000) % 60);
+    const minutes = Math.floor((duration / (1000 * 60)) % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  },
     seek() {
       this.$refs.audio.currentTime = this.currentTime;
     },
