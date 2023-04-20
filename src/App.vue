@@ -44,7 +44,7 @@
     <main>
       <router-view></router-view>
     </main>
-    <MediaPlayer ref="mediaPlayerComponent" :podcast="podcast" :audio-preview-url="audioPreviewUrl" />
+    <MediaPlayer ref="mediaPlayerComponent" :podcast="podcast" :audio-preview-url="audioPreviewUrl" @remove-media-player="hideMediaPlayer" />
   </div>
 </template>
 
@@ -76,6 +76,10 @@ export default {
   },
   toggleFullscreen() {
     this.$refs.mediaPlayerComponent.toggleFullscreen();
+  },
+  hideMediaPlayer() {
+    this.audioPreviewUrl = "";
+    this.podcast = null;
   },
   },
 };
