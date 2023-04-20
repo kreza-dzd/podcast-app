@@ -1,5 +1,6 @@
 <template>
-  <div class="media-player" @on-toggle-fullscreen="toggleFullscreen" :style="{
+
+  <div class="media-player" v-on:toggle-fullscreen="toggleFullscreen" :style="{
     position: fullscreen ? 'fixed' : 'static',
     top: fullscreen ? '0' : 'auto',
     left: fullscreen ? '0' : 'auto',
@@ -9,12 +10,18 @@
     zIndex: fullscreen ? '9999' : 'auto'
   }">
     <div v-if="podcast">
-      <h3>Now Playing: {{ podcast.title }}</h3>
-      <div class="button-container">
-        <button class="button" @click="previous">Prev</button>
-        <button class="button play-pause" @click="togglePlay">{{ isPlaying ? 'Pause' : 'Play' }}</button>
-        <button class="button" @click="next">Next</button>
-      </div>
+  <h3>Now Playing: {{ podcast.artists[0].name }}</h3>
+  <h3>{{ podcast.name }}</h3>
+  <div class="button-container">
+    <button class="button" @click="previous">Prev</button>
+    <button class="button play-pause" @click="togglePlay">{{ isPlaying ? 'Pause' : 'Play' }}</button>
+    <button class="button" @click="next">Next</button>
+  </div>
+  <button class="button remove" @click="removeMediaPlayer">X</button>
+
+
+
+
       <input
         v-if="podcast"
         type="range"
@@ -25,15 +32,18 @@
         class="progress-bar"
       />
      <audio
+        v-if="audioPreviewUrl"
         ref="audio"
         :src="audioPreviewUrl"
         @play="isPlaying = true"
         @pause="isPlaying = false"
         @loadedmetadata="duration = $event.target.duration"
         @timeupdate="updateTime($event)"
+        @ended="handleAudioEnded"
       ></audio>
     </div>
   </div>
+  
 </template>
 
 
@@ -90,12 +100,14 @@ export default {
       }
     },
     togglePlay() {
-      if (this.$refs.audio.paused) {
-        this.$refs.audio.play();
-      } else {
-        this.$refs.audio.pause();
-      }
-    },
+  if (!this.$refs.audio) return;
+  if (this.$refs.audio.paused) {
+    this.$refs.audio.play();
+  } else {
+    this.$refs.audio.pause();
+  }
+},
+
     updateTime(event) {
       this.currentTime = event.target.currentTime;
     },
@@ -107,22 +119,40 @@ export default {
     seek() {
       this.$refs.audio.currentTime = this.currentTime;
     },
-    playPreview() {
+   playPreview() {
+  if (this.$refs.audio && this.audioPreviewUrl) {
+    this.$refs.audio.currentTime = 0;
+    this.$refs.audio.play();
+    setTimeout(() => {
       if (this.$refs.audio) {
-        this.$refs.audio.currentTime = 0;
-        this.$refs.audio.play();
-        setTimeout(() => {
-          this.$refs.audio.pause();
-          this.isPlaying = false;
-        }, this.previewDuration * 1000);
+        this.$refs.audio.pause();
+        this.isPlaying = false;
       }
-    },
-    handleAudioEnded() {
-      this.isPlaying = false;
-    },
+    }, this.previewDuration * 1000);
+  }
+},
+
     toggleFullscreen() {
     this.fullscreen = !this.fullscreen;
   },
+  removeMediaPlayer() {
+  this.fullscreen = false;
+  this.$nextTick(() => {
+    if (this.$refs.audio) {
+      this.$refs.audio.pause();
+    }
+    this.$emit("remove-media-player");
+  })
+},
+handleAudioEnded() {
+  if (this.$refs.audio) {
+    this.$refs.audio.pause();
+    this.isPlaying = false;
+  }
+}
+
+
+
   },
   watch: {
     audioPreviewUrl() {
@@ -135,7 +165,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 .media-player {
   display: flex;
   justify-content: center;
@@ -198,4 +228,20 @@ export default {
   display: inline;
   margin: 0 5px;
 }
+.remove {
+  height: 25px;
+  width: 25px;
+  font-size: 8px;
+  position: absolute;
+  top: 520px;
+  right: 500px;
+  background-color: red;
+}
+.media-player h3 {
+  color: white;
+  margin-bottom: 4rem;
+}
+
+
+
 </style>
