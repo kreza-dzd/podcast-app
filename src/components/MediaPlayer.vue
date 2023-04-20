@@ -1,5 +1,13 @@
 <template>
-  <div class="media-player">
+  <div class="media-player" @on-toggle-fullscreen="toggleFullscreen" :style="{
+    position: fullscreen ? 'fixed' : 'static',
+    top: fullscreen ? '0' : 'auto',
+    left: fullscreen ? '0' : 'auto',
+    width: fullscreen ? '100%' : 'auto',
+    height: fullscreen ? '100%' : 'auto',
+    backgroundColor: fullscreen ? 'rgba(0, 0, 0, 0.8)' : 'transparent',
+    zIndex: fullscreen ? '9999' : 'auto'
+  }">
     <div v-if="podcast">
       <h3>Now Playing: {{ podcast.title }}</h3>
       <div class="button-container">
@@ -54,7 +62,8 @@ export default {
       isPlaying: false,
       duration: 0,
       currentTime: 0,
-      previewDuration: 30, // 30-second preview
+      previewDuration: 30,
+      fullscreen: false,
     };
   },
   methods: {
@@ -111,6 +120,9 @@ export default {
     handleAudioEnded() {
       this.isPlaying = false;
     },
+    toggleFullscreen() {
+    this.fullscreen = !this.fullscreen;
+  },
   },
   watch: {
     audioPreviewUrl() {
