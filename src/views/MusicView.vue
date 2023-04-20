@@ -19,6 +19,14 @@ import PodcastItem from '@/components/PodcastItem.vue';
 import MediaPlayer from '@/components/MediaPlayer.vue';
   export default {
     name: 'MusicView',
+  mounted() {
+    this.$emit('show-media-player', false);
+    this.$emit('show-letsgo', false);
+  },
+  beforeUnmount() {
+    this.$emit('show-media-player', true);
+    this.$emit('show-letsgo', true);
+  },
     components: { PodcastItem, MediaPlayer },
 
   methods: {
