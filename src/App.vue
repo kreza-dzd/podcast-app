@@ -14,7 +14,7 @@
       </div>
        <div class="search-container">
       <input type="text" placeholder="Search" v-model="searchQuery" />
-     <LetsGo ref="letsgoComponent" @on-play-preview="setPreviewUrl" :search-query="searchQuery" />
+     <LetsGo ref="letsgoComponent" @on-play-preview="setPreviewUrl" :search-query="searchQuery" @on-toggle-fullscreen="toggleFullscreen" />
 
 
       </div>
@@ -44,7 +44,7 @@
     <main>
       <router-view></router-view>
     </main>
-    <MediaPlayer :podcast="podcast" :audio-preview-url="audioPreviewUrl" />
+    <MediaPlayer ref="mediaPlayerComponent" :podcast="podcast" :audio-preview-url="audioPreviewUrl" />
   </div>
 </template>
 
@@ -73,6 +73,9 @@ export default {
     },
     requestTracks() {
     this.$refs.letsgoComponent.$emit("request-tracks");
+  },
+  toggleFullscreen() {
+    this.$refs.mediaPlayerComponent.toggleFullscreen();
   },
   },
 };
