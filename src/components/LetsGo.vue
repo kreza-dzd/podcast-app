@@ -17,7 +17,7 @@
          v-for="(item, index) in state.tracks"
         :key="index"
         :class="{ 'even-row': index % 2 === 1 }"
-        @click="$emit('on-play-preview', item.preview_url, item)"
+       @click="$emit('on-play-preview', item.preview_url, item); $emit('on-toggle-fullscreen')"
         >
           <td>{{ item.artists[0].name }}</td>
           <td>{{ item.name }}</td>
@@ -46,11 +46,9 @@ const encodedAuth = window.btoa(`${clientId}:${clientSecret}`);
 const state = reactive({
   tracks: [],
 });
-
 const props = defineProps({
   searchQuery: String,
 });
-
 const requestTracks = async () => {
   await axios
     .post(
@@ -94,7 +92,6 @@ const formatDuration = (duration) => {
   const minutes = Math.floor((duration / (1000 * 60)) % 60);
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 };
-
 </script>
 
 
