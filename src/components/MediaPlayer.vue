@@ -1,49 +1,54 @@
 <template>
+  <div class="media-player-container">
+    <div class="media-player" v-on:toggle-fullscreen="toggleFullscreen" :style="{
+      position: fullscreen ? 'fixed' : 'static',
+      top: fullscreen ? '0' : 'auto',
+      left: fullscreen ? '0' : 'auto',
+      width: fullscreen ? '100%' : 'auto',
+      height: fullscreen ? '100%' : 'auto',
+      background: fullscreen ? 'linear-gradient(180deg, #333333 0%, #222222 50%, #111111 100%)' : 'transparent',
+      zIndex: fullscreen ? '9999' : 'auto'
+    }">
+      <div v-if="podcast">
+        <div class="now-playing">
+          <h3>{{ podcast.artists[0].name }}</h3>
+          <h2>{{ podcast.name }}</h2>
+        </div>
+        <div class="progress-container">
+          <span class="current-time">{{ formatDuration(currentTime) }}</span>
+          <input
+            v-if="podcast"
+            type="range"
+            min="0"
+            :max="duration"
+            v-model="currentTime"
+            @change="seek"
+            class="progress-bar"
+          />
+          <span class="duration">{{ formatDuration(duration) }}</span>
+        </div>
+        <div class="button-container">
+          <button class="button" @click="previous"><i class="fas fa-backward"></i></button>
+          <button class="button play-pause" @click="togglePlay">
+            <i class="fas" :class="{ 'fa-play': !isPlaying, 'fa-pause': isPlaying }"></i>
+          </button>
+          <button class="button" @click="next"><i class="fas fa-forward"></i></button>
+        </div>
+         <button class="button-remove" @click="removeMediaPlayer"><font-awesome-icon :icon="['fas', 'chevron-down']" /></button>
 
-  <div class="media-player" v-on:toggle-fullscreen="toggleFullscreen" :style="{
-    position: fullscreen ? 'fixed' : 'static',
-    top: fullscreen ? '0' : 'auto',
-    left: fullscreen ? '0' : 'auto',
-    width: fullscreen ? '100%' : 'auto',
-    height: fullscreen ? '100%' : 'auto',
-    backgroundColor: fullscreen ? 'rgba(0, 0, 0, 0.8)' : 'transparent',
-    zIndex: fullscreen ? '9999' : 'auto'
-  }">
-    <div v-if="podcast">
-  <h3>Now Playing: {{ podcast.artists[0].name }}</h3>
-  <h3>{{ podcast.name }}</h3>
-  <div class="button-container">
-    <button class="button" @click="previous">Prev</button>
-    <button class="button play-pause" @click="togglePlay">{{ isPlaying ? 'Pause' : 'Play' }}</button>
-    <button class="button" @click="next">Next</button>
-  </div>
-  <button class="button remove" @click="removeMediaPlayer">X</button>
-
-
-
-
-      <input
-        v-if="podcast"
-        type="range"
-        min="0"
-        :max="duration"
-        v-model="currentTime"
-        @change="seek"
-        class="progress-bar"
-      />
-     <audio
-        v-if="audioPreviewUrl"
-        ref="audio"
-        :src="audioPreviewUrl"
-        @play="isPlaying = true"
-        @pause="isPlaying = false"
-        @loadedmetadata="duration = $event.target.duration"
-        @timeupdate="updateTime($event)"
-        @ended="handleAudioEnded"
-      ></audio>
+        <audio
+          v-if="audioPreviewUrl"
+          ref="audio"
+          :src="audioPreviewUrl"
+          @play="isPlaying = true"
+          @pause="isPlaying = false"
+          @loadedmetadata="duration = $event.target.duration"
+          @timeupdate="updateTime($event)"
+          @ended="handleAudioEnded"
+        ></audio>
+      </div>
     </div>
   </div>
-  
 </template>
 
 
@@ -168,20 +173,30 @@ handleAudioEnded() {
 <style scoped>
 .media-player {
   display: flex;
+  position: relative;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  padding: 30px;
+  background-color: #222;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.25);
 }
+
 .media-player h3 {
   font-size: 20px;
   font-weight: 400;
-  color: #333;
+  color: #fff;
   margin-top: 20px;
+  margin-bottom: 2rem;
 }
+
 .controls {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .progress-bar {
   width: 100%;
   margin-top: 10px;
@@ -191,6 +206,7 @@ handleAudioEnded() {
   border-radius: 5px;
   outline: none;
 }
+
 .progress-bar::-webkit-slider-thumb {
   appearance: none;
   width: 15px;
@@ -199,11 +215,14 @@ handleAudioEnded() {
   border-radius: 50%;
   cursor: pointer;
 }
+
 .button-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 2rem;
 }
+
 .button {
   height: 50px;
   width: 50px;
@@ -212,10 +231,11 @@ handleAudioEnded() {
   justify-content: center;
   border-radius: 50%;
   background-color: blueviolet;
-  color: aquamarine;
+  color: #fff;
   display: inline;
   font-size: 12px;
 }
+
 .play-pause {
   height: 50px;
   width: 50px;
@@ -224,24 +244,33 @@ handleAudioEnded() {
   justify-content: center;
   border-radius: 50%;
   background-color: blueviolet;
-  color: aquamarine;
+  color: #fff;
   display: inline;
   margin: 0 5px;
 }
-.remove {
+
+.button-remove {
   height: 25px;
   width: 25px;
-  font-size: 8px;
+  font-size: 18px;
   position: absolute;
-  top: 520px;
-  right: 500px;
-  background-color: red;
-}
-.media-player h3 {
-  color: white;
-  margin-bottom: 4rem;
+   top: 10px;
+  left: 30px;
+  background-color: transparent;
+  color: #fff;
+  border: none;
 }
 
-
+@media (max-width: 768px) {
+  .media-player {
+    padding: 20px;
+  }
+  .media-player h3 {
+    font-size: 18px;
+  }
+  .button-container {
+    margin-top: 1rem;
+  }
+}
 
 </style>
