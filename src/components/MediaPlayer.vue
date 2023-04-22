@@ -9,10 +9,15 @@
       background: fullscreen ? 'linear-gradient(180deg, #333333 0%, #222222 50%, #111111 100%)' : 'transparent',
       zIndex: fullscreen ? '9999' : 'auto'
     }">
+  
       <div v-if="podcast">
         <div class="now-playing">
-          <h3>{{ podcast.artists[0].name }}</h3>
-          <h2>{{ podcast.name }}</h2>
+              <h2>
+         <img style="width:300px; height:300px" v-if="podcast.album.images[0]" :src="podcast.album.images[0].url" alt="">
+               </h2>
+          <h3 class="center-text">{{ podcast.artists[0].name }}</h3>
+          <h2 class="center-text">{{ podcast.name }}</h2>
+
         </div>
         <div class="progress-container">
           <span class="current-time">{{ formatDuration(currentTime) }}</span>
@@ -28,13 +33,17 @@
           <span class="duration">{{ formatDuration(duration) }}</span>
         </div>
         <div class="button-container">
-          <button class="button" @click="previous"><i class="fas fa-backward"></i></button>
-          <button class="button play-pause" @click="togglePlay">
-            <i class="fas" :class="{ 'fa-play': !isPlaying, 'fa-pause': isPlaying }"></i>
-          </button>
-          <button class="button" @click="next"><i class="fas fa-forward"></i></button>
-        </div>
-         <button class="button-remove" @click="removeMediaPlayer"><font-awesome-icon :icon="['fas', 'chevron-down']" /></button>
+         <button class="button" @click="previous">
+  <font-awesome-icon :icon="['fas', 'fa-backward']" />
+</button>
+<button class="button play-pause" @click="togglePlay">
+  <font-awesome-icon :icon="['fas', isPlaying ? 'fa-pause' : 'fa-play']" />
+</button>
+<button class="button" @click="next">
+  <font-awesome-icon :icon="['fas', 'fa-forward']" />
+</button>
+
+ <button class="button-remove" @click="removeMediaPlayer"><font-awesome-icon :icon="['fas', 'chevron-down']" /></button>
 
         <audio
           v-if="audioPreviewUrl"
@@ -48,6 +57,7 @@
         ></audio>
       </div>
     </div>
+      </div>
   </div>
 </template>
 
@@ -112,7 +122,6 @@ export default {
     this.$refs.audio.pause();
   }
 },
-
     updateTime(event) {
       this.currentTime = event.target.currentTime;
     },
@@ -136,7 +145,6 @@ export default {
     }, this.previewDuration * 1000);
   }
 },
-
     toggleFullscreen() {
     this.fullscreen = !this.fullscreen;
   },
@@ -155,9 +163,6 @@ handleAudioEnded() {
     this.isPlaying = false;
   }
 }
-
-
-
   },
   watch: {
     audioPreviewUrl() {
@@ -182,7 +187,6 @@ handleAudioEnded() {
   border-radius: 10px;
   box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.25);
 }
-
 .media-player h3 {
   font-size: 20px;
   font-weight: 400;
@@ -190,11 +194,15 @@ handleAudioEnded() {
   margin-top: 20px;
   margin-bottom: 2rem;
 }
-
 .controls {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.center-text {
+  text-align: center;
+  width: 100%;
 }
 
 .progress-bar {
@@ -206,7 +214,6 @@ handleAudioEnded() {
   border-radius: 5px;
   outline: none;
 }
-
 .progress-bar::-webkit-slider-thumb {
   appearance: none;
   width: 15px;
@@ -215,14 +222,12 @@ handleAudioEnded() {
   border-radius: 50%;
   cursor: pointer;
 }
-
 .button-container {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 2rem;
 }
-
 .button {
   height: 50px;
   width: 50px;
@@ -234,8 +239,9 @@ handleAudioEnded() {
   color: #fff;
   display: inline;
   font-size: 12px;
+  margin-right: 30px;
+  margin-left: 30px;
 }
-
 .play-pause {
   height: 50px;
   width: 50px;
@@ -247,8 +253,9 @@ handleAudioEnded() {
   color: #fff;
   display: inline;
   margin: 0 5px;
+  margin-right: 10px;
+  margin-left: 10px;
 }
-
 .button-remove {
   height: 25px;
   width: 25px;
@@ -260,7 +267,6 @@ handleAudioEnded() {
   color: #fff;
   border: none;
 }
-
 @media (max-width: 768px) {
   .media-player {
     padding: 20px;
@@ -272,5 +278,4 @@ handleAudioEnded() {
     margin-top: 1rem;
   }
 }
-
 </style>
