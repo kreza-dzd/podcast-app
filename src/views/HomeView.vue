@@ -1,23 +1,14 @@
 <template>
 
-
     <main>
    
 
 
-  <div class="featured-container">
-  <h2 class="section-title">Featured</h2>
-  <div class="box-wrapper">
-    <div class="box-1"></div>
-    <div class="box-2"></div>
-    <div class="box-3"></div>
-    <div class="box-4"></div>
-    <div class="box-5"></div>
-  </div>
-</div>
+  <FeaturedView />
 
 
-  <div class="new-container">
+
+<div class="new-container">
   <h2 class="section-title">New</h2>
   <div class="box-wrapper">
     <div class="box-6"></div>
@@ -45,9 +36,11 @@
 <script>
 
  
-
+import FeaturedView from '@/components/FeaturedView.vue';
 export default {
-
+  components: {
+    FeaturedView,
+  },
 
   data() {
     return {
@@ -197,9 +190,10 @@ input[type="text"]::-ms-input-placeholder {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 100px 30px;
+  padding: 20px 10px; /* Update this line to reduce the height by 30% */
   text-align: center;
 }
+
 .box-6, .box-7, .box-8, .box-9, .box-10 {
   flex: 0 0 50%;
   margin-right: 20px;
@@ -246,6 +240,7 @@ input[type="text"]::-ms-input-placeholder {
 .box-wrapper {
   display: flex;
   overflow-x: scroll;
+  flex-wrap: nowrap;
   margin-bottom: 20px;
 }
 .featured-box img {
