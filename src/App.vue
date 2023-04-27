@@ -7,14 +7,16 @@
         <span class="menu-line" :class="{ active: showSidebar }" />
       </button>
       <router-link to="/">
-        <h1 class="app-title" @click="showTable = !showTable">My App</h1>
+        <h1 class="app-title" @click="showTable = false">My App</h1>
+
       </router-link>
        <div class="user-profile">
      <img src="./assets/CD.jpg" alt="User Profile" />
       </div>
        <div class="search-container">
       <input type="text" placeholder="Search" v-model="searchQuery" />
-     <LetsGo ref="letsgoComponent" @on-play-preview="setPreviewUrl" :search-query="searchQuery" @on-toggle-fullscreen="toggleFullscreen" />
+      <LetsGo ref="letsgoComponent" @on-play-preview="setPreviewUrl" :search-query="searchQuery" @on-toggle-fullscreen="toggleFullscreen" :show-table="showTable" />
+
 
 
       </div>
