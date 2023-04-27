@@ -2,7 +2,7 @@
   <div>
     <button @click="requestTracks">Search for a track</button>
 
-    <table>
+    <table v-show="$parent.showTable">
       <thead>
         <tr>
           <th>Artist</th>
