@@ -2,7 +2,7 @@
   <div>
     <button @click="requestTracks">Search for a track</button>
 
-    <table v-show="$parent.showTable">
+    <table v-show="showTable">
       <thead>
         <tr>
           <th>Artist</th>
@@ -48,6 +48,7 @@ const state = reactive({
 });
 const props = defineProps({
   searchQuery: String,
+  showTable: Boolean,
 });
 const requestTracks = async () => {
   await axios
