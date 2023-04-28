@@ -78,12 +78,16 @@ const fetchRecommendedAlbums = async (accessToken) => {
   flex-wrap: nowrap;
   overflow-x: scroll;
   margin-bottom: 20px;
-  padding: 70px;
+  padding: 40px 130px 50px 20px;
 }
 
 .album-name {
   margin-top: 5px;
 }
+
+  .album-name {
+    color: black;
+  }
 
 img {
   width: 100%;
