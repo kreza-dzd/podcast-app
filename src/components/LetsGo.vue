@@ -3,7 +3,7 @@
     <button @click="requestTracks">Search for a track</button>
 
     <table v-show="showTable">
-      <thead>
+      <thead v-if="showTableHeader">
         <tr>
           <th>Artist</th>
           <th>Track</th>
@@ -33,23 +33,25 @@
         </tr>
       </tbody>
     </table>
-
   </div>
 </template>
 
 <script setup>
-import { defineProps,reactive} from 'vue';
+import { defineProps, reactive,defineExpose } from 'vue';
 const axios = require('axios');
 const clientId = '17e41028c79e4f128a873410a112bd0e';
 const clientSecret = 'de2b9acdd949438588e2a21958897c3f';
 const encodedAuth = window.btoa(`${clientId}:${clientSecret}`);
+
 const state = reactive({
   tracks: [],
 });
 const props = defineProps({
   searchQuery: String,
   showTable: Boolean,
+  showTableHeader: Boolean,
 });
+
 const requestTracks = async () => {
   await axios
     .post(
@@ -88,22 +90,19 @@ const requestTracks = async () => {
       console.log(error);
     });
 };
+
 const formatDuration = (duration) => {
   const seconds = Math.floor((duration / 1000) % 60);
   const minutes = Math.floor((duration / (1000 * 60)) % 60);
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 };
+
+defineExpose({
+  requestTracks,
+});
+
+
 </script>
-
-
-
-
-
-
-
-
-
-
 
 <style scoped>
 table {
@@ -118,6 +117,8 @@ td {
 }
 img {
   width: 50px;
-  height: 50px;
+  height: 50px
+
 }
+
 </style>
