@@ -2,32 +2,11 @@
 
     <main>
    
+      <FeaturedView />
 
+      <NewView />
 
-  <FeaturedView />
-
-
-
-<div class="new-container">
-  <h2 class="section-title">New</h2>
-  <div class="box-wrapper">
-    <div class="box-6"></div>
-    <div class="box-7"></div>
-    <div class="box-8"></div>
-    <div class="box-9"></div>
-    <div class="box-10"></div>
-  </div>
-</div>
-      <div class="recomend-container">
-        <h2 class="section-title">Recomend You</h2>
-        <div class="box-wrapper">
-          <div class="box-11"></div>
-          <div class="box-12"></div>
-          <div class="box-13"></div>
-          <div class="box-14"></div>
-          <div class="box-15"></div>
-        </div>
-      </div>
+      <RecommendedView />
 
     </main>
 
@@ -37,9 +16,12 @@
 
  
 import FeaturedView from '@/components/FeaturedView.vue';
+import NewView from '@/components/NewView.vue';
+import RecommendedView from '@/components/RecommendedView.vue';
+
 export default {
   components: {
-    FeaturedView,
+    FeaturedView, NewView,RecommendedView,
   },
 
   data() {
@@ -190,7 +172,7 @@ input[type="text"]::-ms-input-placeholder {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px 10px; /* Update this line to reduce the height by 30% */
+  padding: 20px 10px; 
   text-align: center;
 }
 
