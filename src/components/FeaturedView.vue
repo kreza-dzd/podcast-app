@@ -1,18 +1,24 @@
 <template>
-    <div class="featured-container">
-      <h2 class="section-title">Featured</h2>
-      <div class="box-wrapper">
-        <div
-          v-for="(playlist, index) in featuredPlaylists.slice(0, 5)"
-          :key="index"
-          :class="`box-${index + 1}`"
-        >
-          <img :src="playlist.images[0].url" :alt="playlist.name" />
-          <div class="playlist-name">{{ playlist.name }}</div>
-        </div>
+  <div class="featured-container">
+    <h2 class="section-title">Featured</h2>
+    <div class="box-wrapper">
+      <div
+        v-for="(playlist, index) in featuredPlaylists.slice(0, 5)"
+        :key="index"
+        :class="`box-${index + 1}`"
+      >
+        <!-- Use optional chaining operator to safely access nested properties -->
+        <img :src="playlist?.images?.[0]?.url" :alt="playlist?.name" />
+        <div class="playlist-name">{{ playlist?.name }}</div>
       </div>
     </div>
-  </template>
+  </div>
+</template>
+
+  
+
+  
+
   
   
   <script setup>
@@ -79,12 +85,14 @@
   flex-wrap: nowrap;
   overflow-x: scroll;
   margin-bottom: 20px;
+  padding: 10px 10px 20px 20px;
 }
 
 
   
   .playlist-name {
     margin-top: 5px;
+    color: black;
   }
   
   img {
