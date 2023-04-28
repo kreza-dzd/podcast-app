@@ -14,8 +14,9 @@
      <img src="./assets/CD.jpg" alt="User Profile" />
       </div>
        <div class="search-container">
-      <input type="text" placeholder="Search" v-model="searchQuery" />
-      <LetsGo ref="letsgoComponent" @on-play-preview="setPreviewUrl" :search-query="searchQuery" @on-toggle-fullscreen="toggleFullscreen" :show-table="showTable" />
+      <input type="text" placeholder="Search" v-model="searchQuery" @keyup.enter="requestTracks"/>
+      <LetsGo ref="letsgoComponent" @on-play-preview="setPreviewUrl" :search-query="searchQuery" @on-toggle-fullscreen="toggleFullscreen" :show-table="showTable" @request-tracks="requestTracksFromInput"/>
+
 
 
 
@@ -63,6 +64,7 @@ export default {
        audioPreviewUrl: "",
        searchQuery: "",
        showTable: true,
+       showTableHeader: false,
        podcastList: []
     };
   },
@@ -74,8 +76,9 @@ export default {
     this.audioPreviewUrl = url;
     this.podcast = podcast;
     },
-    requestTracks() {
+    async requestTracks() {
     this.$refs.letsgoComponent.$emit("request-tracks");
+    this.showTableHeader = true;
   },
   toggleFullscreen() {
     this.$refs.mediaPlayerComponent.toggleFullscreen();
@@ -83,6 +86,9 @@ export default {
   hideMediaPlayer() {
     this.audioPreviewUrl = "";
     this.podcast = null;
+  },
+  requestTracksFromInput() {
+    this.$refs.letsgoComponent.requestTracks();
   },
   },
 };
