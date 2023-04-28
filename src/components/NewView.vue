@@ -79,11 +79,12 @@ const fetchNewReleases = async (accessToken) => {
   flex-wrap: nowrap;
   overflow-x: scroll;
   margin-bottom: 20px;
-  padding: 40px;
+  padding: 40px 50px 50px 20px;
 }
 
 .album-name {
   margin-top: 5px;
+  color: black;
 }
 
 img {
