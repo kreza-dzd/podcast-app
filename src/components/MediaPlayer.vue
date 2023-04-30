@@ -199,12 +199,10 @@ handleAudioEnded() {
   justify-content: center;
   align-items: center;
 }
-
 .center-text {
   text-align: center;
   width: 100%;
 }
-
 .progress-bar {
   width: 100%;
   margin-top: 10px;
