@@ -42,7 +42,6 @@ const axios = require('axios');
 const clientId = '17e41028c79e4f128a873410a112bd0e';
 const clientSecret = 'de2b9acdd949438588e2a21958897c3f';
 const encodedAuth = window.btoa(`${clientId}:${clientSecret}`);
-
 const state = reactive({
   tracks: [],
 });
@@ -51,7 +50,6 @@ const props = defineProps({
   showTable: Boolean,
   showTableHeader: Boolean,
 });
-
 const requestTracks = async () => {
   await axios
     .post(
@@ -90,18 +88,14 @@ const requestTracks = async () => {
       console.log(error);
     });
 };
-
 const formatDuration = (duration) => {
   const seconds = Math.floor((duration / 1000) % 60);
   const minutes = Math.floor((duration / (1000 * 60)) % 60);
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 };
-
 defineExpose({
   requestTracks,
 });
-
-
 </script>
 
 <style scoped>
@@ -118,7 +112,5 @@ td {
 img {
   width: 50px;
   height: 50px
-
 }
-
 </style>
