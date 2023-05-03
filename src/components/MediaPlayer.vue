@@ -1,6 +1,7 @@
 <template>
-  <div class="media-player-container">
-    <div class="media-player" v-on:toggle-fullscreen="toggleFullscreen" :style="{
+<div class="media-player-wrapper">
+  <div class="media-player-container" :class="{ 'mini-media-player': mini, 'changed-background-color': changedBackgroundColor }">
+    <div class="media-player" :class="{ 'reduced-size': mini }" :style="{
       position: fullscreen ? 'fixed' : 'static',
       top: fullscreen ? '0' : 'auto',
       left: fullscreen ? '0' : 'auto',
@@ -13,7 +14,7 @@
       <div v-if="podcast">
         <div class="now-playing">
               <h2>
-         <img style="width:300px; height:300px" v-if="podcast.album.images[0]" :src="podcast.album.images[0].url" alt="">
+         <img v-if="podcast.album.images[0]" :src="podcast.album.images[0].url" alt="" :class="{ 'reduced-size': mini }" style="width:300px; height:300px">
                </h2>
           <h3 class="center-text">{{ podcast.artists[0].name }}</h3>
           <h2 class="center-text">{{ podcast.name }}</h2>
@@ -43,7 +44,19 @@
   <font-awesome-icon :icon="['fas', 'fa-forward']" />
 </button>
 
- <button class="button-remove" @click="removeMediaPlayer"><font-awesome-icon :icon="['fas', 'chevron-down']" /></button>
+<button v-if="!mini" class="button-remove" @click="removeMediaPlayer(); toggleBackgroundColor()">
+  <font-awesome-icon :icon="['fas', 'chevron-down']" />
+</button>
+<button v-else class="button-remove" @click="removeMediaPlayer(); toggleBackgroundColor()">
+  <font-awesome-icon :icon="['fas', 'chevron-up']" />
+</button>
+
+
+
+
+
+
+
 
         <audio
           v-if="audioPreviewUrl"
@@ -58,6 +71,7 @@
       </div>
     </div>
       </div>
+  </div>
   </div>
 </template>
 
@@ -89,9 +103,14 @@ export default {
       currentTime: 0,
       previewDuration: 30,
       fullscreen: false,
+      mini: false,
+      changedBackgroundColor: false,
     };
   },
   methods: {
+     toggleBackgroundColor() {
+    this.changedBackgroundColor = !this.changedBackgroundColor;
+  },
     previous() {
       if (!this.podcast || !this.podcastList.length) return;
       const currentIndex = this.podcastList.findIndex(
@@ -148,15 +167,16 @@ export default {
     toggleFullscreen() {
     this.fullscreen = !this.fullscreen;
   },
-  removeMediaPlayer() {
-  this.fullscreen = false;
-  this.$nextTick(() => {
-    if (this.$refs.audio) {
-      this.$refs.audio.pause();
-    }
-    this.$emit("remove-media-player");
-  })
+removeMediaPlayer() {
+  if (this.mini) {
+    this.fullscreen = true;
+  } else {
+    this.fullscreen = false;
+  }
+  this.mini = !this.mini;
 },
+
+
 handleAudioEnded() {
   if (this.$refs.audio) {
     this.$refs.audio.pause();
@@ -194,6 +214,36 @@ handleAudioEnded() {
   margin-top: 20px;
   margin-bottom: 2rem;
 }
+
+.media-player.reduced-size {
+  width: 50%;
+  transform: scale(0.5);
+}
+
+img.reduced-size {
+  width: 150px;
+  height: 150px;
+}
+
+.media-player-wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 1000;
+}
+
+
+
+.mini-media-player .media-player {
+  padding: 15px;
+  box-shadow: none;
+  background-color: transparent;
+}
+
+
 .controls {
   display: flex;
   justify-content: center;
@@ -265,6 +315,9 @@ handleAudioEnded() {
   color: #fff;
   border: none;
 }
+
+
+
 @media (max-width: 768px) {
   .media-player {
     padding: 20px;
@@ -276,4 +329,4 @@ handleAudioEnded() {
     margin-top: 1rem;
   }
 }
-</style>
+</style> 
