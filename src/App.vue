@@ -48,7 +48,6 @@
       <router-view></router-view>
     </main>
     <MediaPlayer ref="mediaPlayerComponent" :podcast="podcast" :audio-preview-url="audioPreviewUrl" @remove-media-player="hideMediaPlayer" />
-  <MiniMediaPlayer :podcast="podcast" :audio-preview-url="audioPreviewUrl" :audio-element="audioElement" />
 
   </div>
 </template>
@@ -56,9 +55,8 @@
 <script>
 import LetsGo from '@/components/LetsGo.vue';
 import MediaPlayer from "@/components/MediaPlayer.vue";
-import MiniMediaPlayer from "@/components/MiniMediaPlayer.vue";
 export default {
-   components: { LetsGo, MediaPlayer, MiniMediaPlayer },
+   components: { LetsGo, MediaPlayer, },
   data() {
     return {
        showSidebar: false,
