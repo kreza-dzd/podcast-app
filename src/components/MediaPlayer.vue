@@ -239,8 +239,8 @@ handleAudioEnded() {
 
 .media-player-container.mini-media-player .image-container {
   position: absolute;
-  top: 50px; /* adjust as needed */
-  left: -150px; /* adjust as needed */
+  top: 50px; 
+  left: -150px;  
   width: 50px;
 }
 
