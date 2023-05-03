@@ -14,7 +14,12 @@
       <div v-if="podcast">
         <div class="now-playing">
               <h2>
-         <img v-if="podcast.album.images[0]" :src="podcast.album.images[0].url" alt="" :class="{ 'reduced-size': mini }" style="width:300px; height:300px">
+       <div class="image-container" :class="{ 'mini-image-container': mini }">
+  <img v-if="podcast.album.images[0]" :src="podcast.album.images[0].url" alt="" :class="['media-player-img', { 'mini-media-player-img': mini, 'reduced-size': mini }]" :style="mini ? { width: '150px', height: '150px' } : { width: '300px', height: '300px' }">
+</div>
+
+
+
                </h2>
           <h3 class="center-text">{{ podcast.artists[0].name }}</h3>
           <h2 class="center-text">{{ podcast.name }}</h2>
@@ -175,8 +180,6 @@ removeMediaPlayer() {
   }
   this.mini = !this.mini;
 },
-
-
 handleAudioEnded() {
   if (this.$refs.audio) {
     this.$refs.audio.pause();
@@ -214,15 +217,9 @@ handleAudioEnded() {
   margin-top: 20px;
   margin-bottom: 2rem;
 }
-
 .media-player.reduced-size {
   width: 50%;
   transform: scale(0.5);
-}
-
-img.reduced-size {
-  width: 150px;
-  height: 150px;
 }
 
 .media-player-wrapper {
@@ -234,13 +231,39 @@ img.reduced-size {
   justify-content: center;
   z-index: 1000;
 }
-
-
-
 .mini-media-player .media-player {
   padding: 15px;
   box-shadow: none;
   background-color: transparent;
+}
+
+.media-player-container.mini-media-player .image-container {
+  position: absolute;
+  top: 50px; /* adjust as needed */
+  left: -150px; /* adjust as needed */
+  width: 50px;
+}
+
+.media-player-container.mini-media-player .media-player-img {
+  display: flex;
+  justify-content: space-around;
+}
+
+
+
+.image-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+
+.media-player-container.mini-media-player .progress-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 
@@ -315,9 +338,6 @@ img.reduced-size {
   color: #fff;
   border: none;
 }
-
-
-
 @media (max-width: 768px) {
   .media-player {
     padding: 20px;
