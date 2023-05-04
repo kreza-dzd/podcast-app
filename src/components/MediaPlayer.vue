@@ -220,6 +220,8 @@ handleAudioEnded() {
 .media-player.reduced-size {
   width: 50%;
   transform: scale(0.5);
+  margin-top: -5rem;
+  margin-bottom: -3rem;
 }
 
 .media-player-wrapper {
@@ -230,6 +232,7 @@ handleAudioEnded() {
   display: flex;
   justify-content: center;
   z-index: 1000;
+  margin-bottom: 3rem;
 }
 .mini-media-player .media-player {
   padding: 15px;
@@ -243,6 +246,11 @@ handleAudioEnded() {
   left: -150px;  
   width: 50px;
 }
+
+.media-player-container.mini-media-player {
+  background-color: #f4f3f3;
+}
+
 
 .media-player-container.mini-media-player .media-player-img {
   display: flex;
