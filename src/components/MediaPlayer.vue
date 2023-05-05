@@ -19,6 +19,7 @@
           </div>
           <div class="progress-container">
             <span class="current-time">{{ formatDuration(currentTime) }}</span>
+
             <input
               v-if="podcast"
               type="range"
@@ -28,16 +29,18 @@
               @change="seek"
               class="progress-bar"
             />
-            <span class="duration">{{ formatDuration(duration) }}</span>
+            <span class="duration">{{ formatDuration(currentTime, duration) }}</span>
+
+
           </div>
           <div class="button-container">
-  <button class="button fullscreen-only" @click="previous"> <!-- Moved the class here -->
+  <button class="button fullscreen-only" @click="previous">
     <font-awesome-icon :icon="['fas', 'fa-backward']" />
   </button>
   <button class="button play-pause" @click="togglePlay">
     <font-awesome-icon :icon="['fas', isPlaying ? 'fa-pause' : 'fa-play']" />
   </button>
-  <button class="button fullscreen-only" @click="next"> <!-- Moved the class here -->
+  <button class="button fullscreen-only" @click="next"> 
     <font-awesome-icon :icon="['fas', 'fa-forward']" />
   </button>
   <button v-if="!mini" class="button-remove" @click="removeMediaPlayer(); toggleBackgroundColor()">
@@ -57,14 +60,15 @@
   
   
           <audio
-            v-if="audioPreviewUrl"
-            ref="audio"
-            :src="audioPreviewUrl"
-            @play="isPlaying = true"
-            @pause="isPlaying = false"
-            @loadedmetadata="duration = $event.target.duration"
-            @timeupdate="updateTime($event)"
-            @ended="handleAudioEnded"
+          v-if="audioPreviewUrl"
+          ref="audio"
+          :key="audioPreviewUrl"
+         :src="audioPreviewUrl"
+          @play="isPlaying = true"
+          @pause="isPlaying = false"
+          @loadedmetadata="duration = $event.target.duration * 1000"
+          @timeupdate="updateTime($event)"
+          @ended="handleAudioEnded"
           ></audio>
         </div>
       </div>
@@ -165,14 +169,25 @@
       this.$refs.audio.pause();
     }
   },
-      updateTime(event) {
-        this.currentTime = event.target.currentTime;
-      },
-        formatDuration(duration) {
-      const seconds = Math.floor((duration / 1000) % 60);
-      const minutes = Math.floor((duration / (1000 * 60)) % 60);
-      return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    },
+  updateTime(event) {
+  this.currentTime = event.target.currentTime * 1000;
+},
+
+      formatDuration(duration, totalDuration = null) {
+  if (totalDuration !== null) {
+    duration = totalDuration - duration;
+  }
+  const seconds = Math.floor((duration / 1000) % 60);
+  const minutes = Math.floor((duration / (1000 * 60)) % 60);
+
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+},
+
+
+
+
+
+
       seek() {
         this.$refs.audio.currentTime = this.currentTime;
       },
@@ -204,6 +219,7 @@
       audioPreviewUrl() {
         this.$nextTick(() => {
           this.playPreview();
+          this.duration = 0;
         });
       },
     },
