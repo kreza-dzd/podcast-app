@@ -180,12 +180,6 @@
     if (this.$refs.audio && this.audioPreviewUrl) {
       this.$refs.audio.currentTime = 0;
       this.$refs.audio.play();
-      setTimeout(() => {
-        if (this.$refs.audio) {
-          this.$refs.audio.pause();
-          this.isPlaying = false;
-        }
-      }, this.previewDuration * 1000);
     }
   },
       toggleFullscreen() {
