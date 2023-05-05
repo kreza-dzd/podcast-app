@@ -7,7 +7,7 @@
           <div class="now-playing">
                 <h2>
          <div class="image-container" :class="{ 'mini-image-container': mini }">
-    <img v-if="podcast.album.images[0]" :src="podcast.album.images[0].url" alt="" :class="['media-player-img', { 'mini-media-player-img': mini, 'reduced-size': mini }]" :style="mini ? { width: '150px', height: '150px' } : { width: '300px', height: '300px' }">
+    <img v-if="podcast.album.images[0]" :src="podcast.album.images[0].url" alt="" :class="['media-player-img', { 'mini-media-player-img': mini, 'reduced-size': mini }]" :style="mini ? { width: '80px', height: '80px' } : { width: '300px', height: '300px' }">
   </div>
   
   
@@ -31,22 +31,23 @@
             <span class="duration">{{ formatDuration(duration) }}</span>
           </div>
           <div class="button-container">
-           <button class="button" @click="previous">
+  <button class="button fullscreen-only" @click="previous"> <!-- Moved the class here -->
     <font-awesome-icon :icon="['fas', 'fa-backward']" />
   </button>
   <button class="button play-pause" @click="togglePlay">
     <font-awesome-icon :icon="['fas', isPlaying ? 'fa-pause' : 'fa-play']" />
   </button>
-  <button class="button" @click="next">
+  <button class="button fullscreen-only" @click="next"> <!-- Moved the class here -->
     <font-awesome-icon :icon="['fas', 'fa-forward']" />
   </button>
-  
   <button v-if="!mini" class="button-remove" @click="removeMediaPlayer(); toggleBackgroundColor()">
     <font-awesome-icon :icon="['fas', 'chevron-down']" />
   </button>
   <button v-else class="button-remove" @click="removeMediaPlayer(); toggleBackgroundColor()">
     <font-awesome-icon :icon="['fas', 'chevron-up']" />
   </button>
+</div>
+
   
   
   
@@ -68,7 +69,6 @@
         </div>
       </div>
         </div>
-    </div>
     </div>
   </template>
   
@@ -253,17 +253,31 @@
   }
   .media-player-container.mini-media-player .image-container {
     position: absolute;
-    top: 50px; 
+    top: 80px; 
     left: -150px;  
     width: 50px;
   }
   .media-player-container.mini-media-player {
     background-color: #f4f3f3;
+    color: black;
+    width: 90%;
   }
+
+  .media-player-container.mini-media-player .play-pause {
+  position: absolute;
+  left: 400px; 
+  bottom: 30px;
+}
   .media-player-container.mini-media-player .media-player-img {
     display: flex;
     justify-content: space-around;
   }
+
+
+  .media-player-container.mini-media-player .fullscreen-only {
+  display: none;
+}
+
   .image-container {
     display: flex;
     justify-content: flex-start;
@@ -358,5 +372,9 @@
     .button-container {
       margin-top: 1rem;
     }
+
+    .media-player-container.full-screen-media-player .fullscreen-only {
+    display: block;
+  }
   }
   </style> 
