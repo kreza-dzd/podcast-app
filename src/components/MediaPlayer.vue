@@ -242,7 +242,7 @@
     width: 50%;
     transform: scale(0.5);
     margin-top: -5rem;
-    margin-bottom: -3rem;
+    margin-bottom: -5rem;
   }
   .media-player-wrapper {
     position: fixed;
@@ -261,7 +261,7 @@
   }
   .media-player-container.mini-media-player .image-container {
     position: absolute;
-    top: 80px; 
+    top: 65px; 
     left: -150px;  
     width: 50px;
   }
@@ -273,7 +273,7 @@
   .media-player-container.mini-media-player .play-pause {
   position: absolute;
   left: 400px; 
-  bottom: 30px;
+  bottom: 80px;
 }
   .media-player-container.mini-media-player .media-player-img {
     display: flex;
@@ -294,6 +294,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
+  
   }
 
 
