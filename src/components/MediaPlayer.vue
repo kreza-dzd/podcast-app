@@ -1,6 +1,7 @@
 <template>
   <div class="media-player-wrapper">
-    <div class="media-player-container" :class="{ 'mini-media-player': mini, 'changed-background-color': changedBackgroundColor }">
+    <div class="media-player-container" :class="{ 'mini-media-player': mini, 'changed-background-color': changedBackgroundColor }" @click.stop="handleContainerClick">
+
       <div class="media-player" :class="{ 'reduced-size': mini }"  :style="mediaPlayerStyle">
     
         <div v-if="podcast">
@@ -38,17 +39,19 @@
     <font-awesome-icon :icon="['fas', 'fa-backward']" />
   </button>
   <button class="button play-pause" @click="togglePlay">
-    <font-awesome-icon :icon="['fas', isPlaying ? 'fa-pause' : 'fa-play']" />
+    <font-awesome-icon :icon="['fas', isPlaying ? 'fa-pause' : 'fa-play']" @click.stop="togglePlay" />
   </button>
   <button class="button fullscreen-only" @click="next"> 
     <font-awesome-icon :icon="['fas', 'fa-forward']" />
   </button>
-  <button v-if="!mini" class="button-remove" @click="removeMediaPlayer(); toggleBackgroundColor()">
-    <font-awesome-icon :icon="['fas', 'chevron-down']" />
-  </button>
-  <button v-else class="button-remove" @click="removeMediaPlayer(); toggleBackgroundColor()">
-    <font-awesome-icon :icon="['fas', 'chevron-up']" />
-  </button>
+  <button v-if="!mini" class="button-remove" @click.stop="handleButtonRemoveClick">
+  <font-awesome-icon :icon="['fas', 'chevron-down']" />
+</button>
+<button v-else class="button-remove" @click.stop="handleButtonRemoveClick">
+  <font-awesome-icon :icon="['fas', 'chevron-up']" />
+</button>
+
+
 </div>
 
   
@@ -136,6 +139,20 @@
       };
     },
     methods: {
+      handleContainerClick() {
+  if (this.mini) {
+    this.removeMediaPlayer();
+    this.toggleBackgroundColor();
+  }
+},
+handleButtonRemoveClick() {
+  this.removeMediaPlayer();
+},
+
+
+
+
+
        toggleBackgroundColor() {
       this.changedBackgroundColor = !this.changedBackgroundColor;
     },
@@ -296,8 +313,6 @@
     width: 100%;
   
   }
-
-
   .controls {
     display: flex;
     justify-content: center;
