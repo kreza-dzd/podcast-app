@@ -13,7 +13,7 @@
   
   
                  </h2>
-            <h3 class="center-text">{{ podcast.artists[0].name }}</h3>
+            <h3 class="center-text" v-show="!mini">{{ podcast.artists[0].name }}</h3>
             <h2 class="center-text">{{ podcast.name }}</h2>
   
           </div>
@@ -172,22 +172,14 @@
   updateTime(event) {
   this.currentTime = event.target.currentTime * 1000;
 },
-
       formatDuration(duration, totalDuration = null) {
   if (totalDuration !== null) {
     duration = totalDuration - duration;
   }
   const seconds = Math.floor((duration / 1000) % 60);
   const minutes = Math.floor((duration / (1000 * 60)) % 60);
-
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 },
-
-
-
-
-
-
       seek() {
         this.$refs.audio.currentTime = this.currentTime;
       },
@@ -263,7 +255,7 @@
     margin-bottom: 3rem;
   }
   .mini-media-player .media-player {
-    padding: 15px;
+    padding: 65px;
     box-shadow: none;
     background-color: transparent;
   }
@@ -278,7 +270,6 @@
     color: black;
     width: 90%;
   }
-
   .media-player-container.mini-media-player .play-pause {
   position: absolute;
   left: 400px; 
@@ -288,12 +279,9 @@
     display: flex;
     justify-content: space-around;
   }
-
-
   .media-player-container.mini-media-player .fullscreen-only {
   display: none;
 }
-
   .image-container {
     display: flex;
     justify-content: flex-start;
@@ -307,6 +295,8 @@
     align-items: center;
     width: 100%;
   }
+
+
   .controls {
     display: flex;
     justify-content: center;
@@ -388,7 +378,6 @@
     .button-container {
       margin-top: 1rem;
     }
-
     .media-player-container.full-screen-media-player .fullscreen-only {
     display: block;
   }
