@@ -47,9 +47,7 @@
   <button v-if="!mini" class="button-remove" @click.stop="handleButtonRemoveClick">
   <font-awesome-icon :icon="['fas', 'chevron-down']" />
 </button>
-<button v-else class="button-remove" @click.stop="handleButtonRemoveClick">
-  <font-awesome-icon :icon="['fas', 'chevron-up']" />
-</button>
+
 
 
 </div>
@@ -286,6 +284,7 @@ handleButtonRemoveClick() {
     background-color: #f4f3f3;
     color: black;
     width: 90%;
+    border-radius: 10px;
   }
   .media-player-container.mini-media-player .play-pause {
   position: absolute;
