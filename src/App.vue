@@ -7,8 +7,7 @@
         <span class="menu-line" :class="{ active: showSidebar }" />
       </button>
       <router-link to="/">
-        <h1 class="app-title" @click="showTable = false">My App</h1>
-
+        <h1 class="app-title" @click="showTable = false; clearInputField()">My App</h1>
       </router-link>
        <div class="user-profile">
      <img src="./assets/CD.jpg" alt="User Profile" />
@@ -71,6 +70,9 @@ export default {
     };
   },
   methods: {
+    clearInputField() {
+    this.searchQuery = "";
+  },
     toggleSidebar() {
       this.showSidebar = !this.showSidebar;
     },
