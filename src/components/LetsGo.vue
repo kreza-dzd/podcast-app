@@ -37,7 +37,13 @@
 </template>
 
 <script setup>
-import { defineProps, reactive,defineExpose } from 'vue';
+import { defineProps, reactive, defineExpose, defineEmits } from 'vue';
+
+
+const emit = defineEmits(['show-table']);
+
+
+
 const axios = require('axios');
 const clientId = '17e41028c79e4f128a873410a112bd0e';
 const clientSecret = 'de2b9acdd949438588e2a21958897c3f';
@@ -51,6 +57,7 @@ const props = defineProps({
   showTableHeader: Boolean,
 });
 const requestTracks = async () => {
+  emit('show-table');
   await axios
     .post(
       'https://accounts.spotify.com/api/token',
