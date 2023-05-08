@@ -14,7 +14,7 @@
       </div>
        <div class="search-container">
       <input type="text" placeholder="Search" v-model="searchQuery" @keyup.enter="requestTracks"/>
-      <LetsGo ref="letsgoComponent" @on-play-preview="setPreviewUrl" :search-query="searchQuery" @on-toggle-fullscreen="toggleFullscreen" :show-table="showTable" @request-tracks="requestTracksFromInput"/>
+      <LetsGo ref="letsgoComponent" @on-play-preview="setPreviewUrl" :search-query="searchQuery" @on-toggle-fullscreen="toggleFullscreen" :show-table="showTable" @request-tracks="requestTracksFromInput" @show-table="showTable = true"/>
 
 
 
