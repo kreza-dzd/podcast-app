@@ -2,7 +2,8 @@
 
     <main>
    
-      <FeaturedView />
+      <FeaturedView @play="playSelectedPlaylist($event)" />
+
 
       <NewView />
 
@@ -30,6 +31,9 @@ export default {
     };
   },
   methods: {
+    playSelectedPlaylist(playlist) {
+      this.$emit('play', playlist);
+    }, 
     toggleSidebar() {
       this.showSidebar = !this.showSidebar;
     },
