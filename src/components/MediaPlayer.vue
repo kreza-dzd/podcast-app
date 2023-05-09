@@ -30,7 +30,9 @@
               @change="seek"
               class="progress-bar"
             />
-            <span class="duration">{{ formatDuration(currentTime, duration) }}</span>
+            <span class="duration">{{ formatDuration(duration) }}</span>
+
+
 
 
           </div>
