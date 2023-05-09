@@ -39,15 +39,12 @@
 <script setup>
 import { defineProps, reactive, defineExpose, defineEmits } from 'vue';
 
+const emit = defineEmits(['show-table', 'on-play-preview', 'on-toggle-fullscreen']);
 
-const emit = defineEmits(['show-table']);
-
-
-
-const axios = require('axios');
 const clientId = '17e41028c79e4f128a873410a112bd0e';
 const clientSecret = 'de2b9acdd949438588e2a21958897c3f';
-const encodedAuth = window.btoa(`${clientId}:${clientSecret}`);
+
+const encodedAuth = btoa(`${clientId}:${clientSecret}`);
 const state = reactive({
   tracks: [],
 });
@@ -56,56 +53,49 @@ const props = defineProps({
   showTable: Boolean,
   showTableHeader: Boolean,
 });
+
 const requestTracks = async () => {
   emit('show-table');
-  await axios
-    .post(
-      'https://accounts.spotify.com/api/token',
-      {
-        grant_type: 'client_credentials',
+
+  try {
+    const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Basic ${encodedAuth}`,
       },
-      {
-        headers: {
-          Authorization: `Basic ${encodedAuth}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      }
-    )
-    .then((response) => {
-      const accessToken = response.data.access_token;
-      axios
-        .get('https://api.spotify.com/v1/search', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          params: {
-            q: props.searchQuery,
-            type: 'track',
-          },
-        })
-        .then((response) => {
-          state.tracks = response.data.tracks.items;
-          console.log(state.tracks);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    })
-    .catch((error) => {
-      console.log(error);
+      body: 'grant_type=client_credentials',
     });
+
+    const tokenData = await tokenResponse.json();
+    const accessToken = tokenData.access_token;
+
+    const trackResponse = await fetch(`https://api.spotify.com/v1/search?q=${encodeURIComponent(props.searchQuery)}&type=track`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const trackData = await trackResponse.json();
+    state.tracks = trackData.tracks.items;
+  } catch (error) {
+    console.error(error);
+  }
 };
+
 const formatDuration = (duration) => {
   const seconds = Math.floor((duration / 1000) % 60);
   const minutes = Math.floor((duration / (1000 * 60)) % 60);
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 };
+
 defineExpose({
   requestTracks,
 });
 </script>
 
 <style scoped>
+
 table {
   width: 100%;
   border-collapse: collapse;
