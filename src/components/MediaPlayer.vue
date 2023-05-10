@@ -84,6 +84,7 @@
   <script>
   export default {
     props: {
+    
       audioPlayer: {
     type: Object,
     required: true,
