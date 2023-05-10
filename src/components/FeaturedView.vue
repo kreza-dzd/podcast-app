@@ -12,12 +12,7 @@
       </div>
     </div>
   </div>
-  <MediaPlayer :audio-player="audioPlayer"
-  :podcast="selectedPodcast"
-  :podcast-list="podcastList"
-  :audio-preview-url="selectedPodcastPreviewUrl"
-  @play="handlePlay"
-  @remove="removeMediaPlayer" />
+
 </template>
 
 <script setup>
