@@ -46,7 +46,7 @@
     <main>
       <router-view></router-view>
     </main>
-    <MediaPlayer ref="mediaPlayerComponent" :podcast="podcast" :audio-preview-url="audioPreviewUrl" @remove-media-player="hideMediaPlayer" />
+    <MediaPlayer ref="mediaPlayerComponent" :podcast="podcast" :audio-preview-url="audioPreviewUrl" :audio-player="audioElement" @remove-media-player="hideMediaPlayer" :accessToken="accessToken"/>
 
   </div>
 </template>
@@ -66,6 +66,7 @@ export default {
        showTable: true,
        showTableHeader: false,
        audioElement: new Audio(),
+       accessToken: null,
        podcastList: []
     };
   },
