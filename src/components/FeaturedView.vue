@@ -5,23 +5,23 @@
       <div
         v-for="(playlist, index) in featuredPlaylists.slice(0, 5)"
         :key="index"
-        :class="`box-${index + 1}`" @click="play(playlist.previewUrl)"
+        :class="`box-${index + 1}`" 
+        @click="playPreview(playlist)"
+        @dblclick="toggleFullscreen"
       >
         <img :src="playlist?.images?.[0]?.url" :alt="playlist?.name" />
         <div class="playlist-name">{{ playlist?.name }}</div>
       </div>
     </div>
   </div>
-
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted, reactive, getCurrentInstance } from 'vue';
 import axios from 'axios';
 
 const featuredPlaylists = ref([]);
 const audioPlayer = reactive(new Audio());
-
 
 onMounted(async () => {
   const response = await getSpotifyAccessToken();
@@ -74,7 +74,10 @@ const fetchFeaturedPlaylists = async (accessToken) => {
   }
 };
 
-const play = (previewUrl) => {
+const instance = getCurrentInstance();
+
+const playPreview = (playlist) => {
+  const previewUrl = playlist.previewUrl;
   if (!previewUrl) {
     console.error('No preview URL available for this playlist');
     return;
@@ -83,22 +86,27 @@ const play = (previewUrl) => {
 
   audioPlayer.src = previewUrl;
   audioPlayer.play();
+
+  instance.emit('on-play-preview', previewUrl);
+};
+
+const toggleFullscreen = () => {
+  instance.emit('on-toggle-fullscreen');
 };
 </script>
-  
-  <style scoped>
-  .featured-container {
-    /* Add your styles */
-  }
-  
-  
-.box {
-    width: 200px;
-    margin: 10px;
-    text-align: center;
-  }
 
-  .box-wrapper {
+<style scoped>
+.featured-container {
+  /* Add your styles */
+}
+
+.box {
+  width: 200px;
+  margin: 10px;
+  text-align: center;
+}
+
+.box-wrapper {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: scroll;
@@ -106,15 +114,13 @@ const play = (previewUrl) => {
   padding: 10px 10px 20px 20px;
 }
 
+.playlist-name {
+  margin-top: 5px;
+  color: black;
+}
 
-  
-  .playlist-name {
-    margin-top: 5px;
-    color: black;
-  }
-  
-  img {
-    width: 100%;
-    height: auto;
-  }
-  </style>
+img {
+  width: 100%;
+  height: auto;
+}
+</style>
