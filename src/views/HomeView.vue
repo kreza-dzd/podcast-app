@@ -2,7 +2,8 @@
 
     <main>
    
-      <FeaturedView @play="playSelectedPlaylist($event)" />
+      <FeaturedView @play="playSelectedPlaylist($event)" @on-play-preview="setPreviewUrl" 
+  @on-toggle-fullscreen="toggleFullscreen"/>
 
 
       <NewView />
@@ -36,6 +37,13 @@ export default {
     }, 
     toggleSidebar() {
       this.showSidebar = !this.showSidebar;
+    },
+    setPreviewUrl(url, podcast) {
+      this.audioPreviewUrl = url;
+      this.podcast = podcast;
+    },
+    toggleFullscreen() {
+      this.$refs.mediaPlayerComponent.toggleFullscreen();
     },
   },
 };
