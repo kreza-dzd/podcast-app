@@ -1,87 +1,55 @@
 <template>
   <div class="media-player-wrapper">
     <div class="media-player-container" :class="{ 'mini-media-player': mini, 'changed-background-color': changedBackgroundColor }" @click.stop="handleContainerClick">
-
-      <div class="media-player" :class="{ 'reduced-size': mini }"  :style="mediaPlayerStyle">
-    
+      <div class="media-player" :class="{ 'reduced-size': mini }" :style="mediaPlayerStyle">
         <div v-if="podcast">
           <div class="now-playing">
-                <h2>
-         <div class="image-container" :class="{ 'mini-image-container': mini }">
-    <img v-if="podcast.album.images[0]" :src="podcast.album.images[0].url" alt="" :class="['media-player-img', { 'mini-media-player-img': mini, 'reduced-size': mini }]" :style="mini ? { width: '80px', height: '80px' } : { width: '300px', height: '300px' }">
-  </div>
-  
-  
-  
-                 </h2>
-            <h3 class="center-text" v-show="!mini">{{ podcast.artists[0].name }}</h3>
+            <h2>
+              <div class="image-container" :class="{ 'mini-image-container': mini }">
+                <img v-if="podcast.album?.images && podcast.album.images[0]" :src="podcast.album.images[0].url" alt="" :class="['media-player-img', { 'mini-media-player-img': mini, 'reduced-size': mini }]" :style="mini ? { width: '80px', height: '80px' } : { width: '300px', height: '300px' }">
+              </div>
+            </h2>
+           <h3 class="center-text" v-if="podcast?.artists && podcast.artists[0] && !mini">{{ podcast.artists[0].name }}</h3>
+
             <h2 class="center-text">{{ podcast.name }}</h2>
-  
           </div>
           <div class="progress-container">
             <span class="current-time">{{ formatDuration(currentTime) }}</span>
-
-            <input
-              v-if="podcast"
-              type="range"
-              min="0"
-              :max="duration"
-              v-model="currentTime"
-              @change="seek"
-              class="progress-bar"
-            />
-            <span class="duration">{{ formatDuration(currentTime, duration) }}</span>
-
-
+            <input v-if="podcast" type="range" min="0" :max="duration" v-model="currentTime" @change="seek" class="progress-bar" />
+            <span class="duration">{{ formatDuration(duration) }}</span>
           </div>
           <div class="button-container">
-  <button class="button fullscreen-only" @click="previous">
-    <font-awesome-icon :icon="['fas', 'fa-backward']" />
-  </button>
-  <button class="button play-pause" @click="togglePlay">
-    <font-awesome-icon :icon="['fas', isPlaying ? 'fa-pause' : 'fa-play']" @click.stop="togglePlay" />
-  </button>
-  <button class="button fullscreen-only" @click="next"> 
-    <font-awesome-icon :icon="['fas', 'fa-forward']" />
-  </button>
-  <button v-if="!mini" class="button-remove" @click.stop="handleButtonRemoveClick">
-  <font-awesome-icon :icon="['fas', 'chevron-down']" />
-</button>
-
-
-
-</div>
-
-  
-  
-  
-  
-  
-  
-  
-  
-          <audio
-          v-if="audioPreviewUrl"
-          ref="audio"
-          :key="audioPreviewUrl"
-         :src="audioPreviewUrl"
-          @play="isPlaying = true"
-          @pause="isPlaying = false"
-          @loadedmetadata="duration = $event.target.duration * 1000"
-          @timeupdate="updateTime($event)"
-          @ended="handleAudioEnded"
-          ></audio>
+            <button class="button fullscreen-only" @click="previous">
+              <font-awesome-icon :icon="['fas', 'fa-backward']" />
+            </button>
+            <button class="button play-pause" @click="togglePlay">
+              <font-awesome-icon :icon="['fas', isPlaying ? 'fa-pause' : 'fa-play']" @click.stop="togglePlay" />
+            </button>
+            <button class="button fullscreen-only" @click="next">
+              <font-awesome-icon :icon="['fas', 'fa-forward']" />
+            </button>
+            <button v-if="!mini" class="button-remove" @click.stop="handleButtonRemoveClick">
+              <font-awesome-icon :icon="['fas', 'chevron-down']" />
+            </button>
+          </div>
+          <audio v-if="audioPreviewUrl" ref="audio" :key="audioPreviewUrl" :src="audioPreviewUrl" @play="isPlaying = true" @pause="isPlaying = false" @loadedmetadata="duration = $event.target.duration * 1000" @timeupdate="updateTime($event)" @ended="handleAudioEnded"></audio>
         </div>
       </div>
-        </div>
     </div>
-  </template>
+  </div>
+</template>
+
   
   
   
   <script>
   export default {
     props: {
+    
+      audioPlayer: {
+    type: Object,
+    required: true,
+  },
       podcast: {
         type: Object,
         required: false,
