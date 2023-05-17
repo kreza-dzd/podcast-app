@@ -49,14 +49,17 @@
     </main>
     <MediaPlayer ref="mediaPlayerComponent" :podcast="podcast" :audio-preview-url="audioPreviewUrl" :audio-player="audioElement" @remove-media-player="hideMediaPlayer" :accessToken="accessToken"/>
 
+   
+
   </div>
 </template>
 
 <script>
 import LetsGo from '@/components/LetsGo.vue';
 import MediaPlayer from "@/components/MediaPlayer.vue";
+
 export default {
-  components: { LetsGo, MediaPlayer },
+  components: { LetsGo, MediaPlayer},
   data() {
     return {
       showSidebar: false,
