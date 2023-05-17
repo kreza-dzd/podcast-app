@@ -2,7 +2,8 @@
 
     <main>
    
-      <FeaturedView />
+      <FeaturedView :featuredPlaylists="featuredPlaylists" @play="playSelectedPlaylist" @toggleFullscreen="handleFullscreen"/>
+
 
       <NewView />
 
@@ -18,6 +19,7 @@
 import FeaturedView from '@/components/FeaturedView.vue';
 import NewView from '@/components/NewView.vue';
 import RecommendedView from '@/components/RecommendedView.vue';
+import { emit } from 'vue';
 
 export default {
   components: {
@@ -27,11 +29,27 @@ export default {
   data() {
     return {
       showSidebar: false,
+      featuredPlaylists: [],
+
+
     };
   },
   methods: {
+    handleFullscreen() {
+      emit('on-toggle-fullscreen');
+    },
+    playSelectedPlaylist(playlist) {
+      this.$emit('play', playlist);
+    }, 
     toggleSidebar() {
       this.showSidebar = !this.showSidebar;
+    },
+    setPreviewUrl(url, podcast) {
+      this.audioPreviewUrl = url;
+      this.podcast = podcast;
+    },
+    toggleFullscreen() {
+      this.$refs.mediaPlayerComponent.toggleFullscreen();
     },
   },
 };
