@@ -15,6 +15,7 @@
     "bootstrap": "^5.2.3",
     "core-js": "^3.8.3",
     "jquery": "^3.6.4",
+    "mitt": "^3.0.0",
     "popper.js": "^1.16.1",
     "universal-base64": "^2.1.0",
     "vue": "^3.2.13",
