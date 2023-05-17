@@ -19,11 +19,16 @@
 import FeaturedView from '@/components/FeaturedView.vue';
 import NewView from '@/components/NewView.vue';
 import RecommendedView from '@/components/RecommendedView.vue';
+
+
 import { emit } from 'vue';
+
 
 export default {
   components: {
-    FeaturedView, NewView,RecommendedView,
+    FeaturedView,
+     NewView,
+     RecommendedView,
   },
 
   data() {
