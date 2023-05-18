@@ -22,7 +22,8 @@ import axios from 'axios';
 const featuredPlaylists = ref([]);
 const audioPlayer = reactive(new Audio());
 
-const emit = defineEmits(['on-toggle-fullscreen']);
+const emit = defineEmits(['on-toggle-fullscreen', 'play']);
+
 
 onMounted(async () => {
   const response = await getSpotifyAccessToken();
