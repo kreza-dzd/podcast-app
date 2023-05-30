@@ -65,18 +65,24 @@ const fetchFeaturedPlaylists = async (accessToken) => {
       },
     });
 
-    const previewUrls = await Promise.all(
+    let previewUrls = await Promise.all(
       response.data.playlists.items.map(async (playlist) => {
         const tracksResponse = await axios.get(playlist.tracks.href, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        return tracksResponse.data.items[0]?.track?.preview_url;
+        // Only return the preview URL if it is not null
+        const previewUrl = tracksResponse.data.items[0]?.track?.preview_url;
+        return previewUrl !== null ? previewUrl : undefined;
       })
     );
 
-    featuredPlaylists.value = response.data.playlists.items.map((playlist, index) => ({
+    // Filter out playlists without a preview URL for the first track
+    let itemsWithPreview = response.data.playlists.items.filter((_, index) => previewUrls[index] !== undefined);
+    previewUrls = previewUrls.filter(url => url !== undefined);
+
+    featuredPlaylists.value = itemsWithPreview.map((playlist, index) => ({
       ...playlist,
       previewUrl: previewUrls[index],
     }));
@@ -84,6 +90,7 @@ const fetchFeaturedPlaylists = async (accessToken) => {
     console.error(error);
   }
 };
+
 
 const playPreview = (playlist) => {
   const previewUrl = playlist.previewUrl;
