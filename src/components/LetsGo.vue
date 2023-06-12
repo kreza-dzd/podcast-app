@@ -13,7 +13,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr
+  
+    <tr
          v-for="(item, index) in state.tracks"
         :key="index"
         :class="{ 'even-row': index % 2 === 1 }"
