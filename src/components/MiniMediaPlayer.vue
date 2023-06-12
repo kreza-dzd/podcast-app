@@ -1,10 +1,10 @@
 <template>
   <div class="mini-media-player" v-if="showMiniPlayer">
     <div class="mini-media-info">
-      <img v-if="podcast && podcast.album.images[0]" :src="podcast.album.images[0].url" alt="" class="mini-album-art">
+      <img v-if="podcast" class="mini-album-art">
       <div>
         <h3 class="mini-title">{{ podcast ? podcast.name : "" }}</h3>
-        <h4 class="mini-artist">{{ podcast && podcast.artists[0] ? podcast.artists[0].name : "" }}</h4>
+      <h4 class="mini-artist">{{ podcast && podcast.artists && podcast.artists[0] ? podcast.artists[0].name : "" }}</h4>
       </div>
     </div>
     <button class="mini-control" @click="previous">
