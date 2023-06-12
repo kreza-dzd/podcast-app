@@ -14,15 +14,37 @@
       </div>
     </div>
   </div>
+  <MiniMediaPlayer
+  v-show="isPlaying"
+  :podcast="currentPlaylist"
+  :audioElement="audioPlayer"
+  :showMiniPlayer="true"
+  @toggle-play="props.togglePlay"
+  @previous="previous"
+  @next="next"
+  @seek="seek"
+/>
+
 </template>
 
 <script setup>
-import { ref, onMounted, reactive, defineEmits } from 'vue';
+
+
+import MiniMediaPlayer from "@/components/MiniMediaPlayer.vue";
+import { ref, onMounted, reactive, defineProps, defineEmits} from 'vue';
+
+const props = defineProps({
+  togglePlay: Function,
+  featuredPlaylists: Array, 
+});
 import axios from 'axios';
 const featuredPlaylists = ref([]);
 const audioPlayer = reactive(new Audio());
+const currentPlaylist = ref(null);
+const isPlaying = ref(false);
 
-const emit = defineEmits(['on-toggle-fullscreen', 'play']);
+const emit = defineEmits(['toggleFullscreen', 'play', 'playPreview']);
+
 
 
 onMounted(async () => {
@@ -30,6 +52,7 @@ onMounted(async () => {
   const accessToken = response.data.access_token;
   await fetchFeaturedPlaylists(accessToken);
 });
+
 
 // Other methods...
 const getImageUrl = (playlist) => {
@@ -91,27 +114,65 @@ const fetchFeaturedPlaylists = async (accessToken) => {
   }
 };
 
+let mediaPlayerStyle = () => {
+  // Access the media player.
+  let mediaPlayer = document.querySelector('.mini-media-player');
+  if (mediaPlayer) {
+    // Change the background color to #f4f3f3 and add other styles.
+    mediaPlayer.style.backgroundColor = '#f4f3f3';
+    mediaPlayer.style.position = 'fixed';
+    mediaPlayer.style.bottom = '0';
+    mediaPlayer.style.left = '0';
+    mediaPlayer.style.right = '0';
+    mediaPlayer.style.display = 'flex';
+    mediaPlayer.style.justifyContent = 'center';
+    mediaPlayer.style.zIndex = '1000';
+    mediaPlayer.style.marginBottom = '3rem';
+    mediaPlayer.style.marginLeft = '1.5rem';
+    mediaPlayer.style.borderRadius = '10px';
+    mediaPlayer.style.width = '90%';
+  }
+}
+
+
+
 
 const playPreview = (playlist) => {
-  const previewUrl = playlist.previewUrl;
-  if (!previewUrl) {
-    console.error('No preview URL available for this playlist');
-    return;
+  currentPlaylist.value = playlist;
+  // Assuming that each playlist has a previewUrl
+  audioPlayer.src = playlist.previewUrl;
+  audioPlayer.play();
+  isPlaying.value = true;
+  mediaPlayerStyle(playlist);
+  emit('playPreview', playlist);
+};
+
+
+const next = () => {
+  const currentIndex = featuredPlaylists.value.findIndex(
+    playlist => playlist.id === currentPlaylist.value.id
+  );
+  if (currentIndex < featuredPlaylists.value.length - 1) {
+    playPreview(featuredPlaylists.value[currentIndex + 1]);
   }
-  if (audioPlayer.src !== previewUrl) {
-    audioPlayer.src = previewUrl;
+};
+
+const previous = () => {
+  const currentIndex = featuredPlaylists.value.findIndex(
+    playlist => playlist.id === currentPlaylist.value.id
+  );
+  if (currentIndex > 0) {
+    playPreview(featuredPlaylists.value[currentIndex - 1]);
   }
-  if (audioPlayer.paused) {
-    audioPlayer.play();
-  } else {
-    audioPlayer.pause();
-  }
-  emit('play', playlist);
+};
+
+const seek = (time) => {
+  audioPlayer.currentTime = time;
 };
 
 
 const toggleFullscreen = () => {
-  emit('on-toggle-fullscreen')
+   emit('toggleFullscreen')
 };
 </script>
 
@@ -143,4 +204,6 @@ img {
   width: 100%;
   height: auto;
 }
+
+
 </style>
