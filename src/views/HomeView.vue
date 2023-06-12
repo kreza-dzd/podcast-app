@@ -2,7 +2,8 @@
 
     <main>
    
-      <FeaturedView :featuredPlaylists="featuredPlaylists" @play="playSelectedPlaylist" @toggleFullscreen="handleFullscreen"/>
+      <FeaturedView 
+    @playPreview="setPreviewUrl"  :togglePlay="togglePlay" @play="playSelectedPlaylist" @toggleFullscreen="handleFullscreen"/>
 
 
       <NewView />
@@ -31,6 +32,7 @@ export default {
      RecommendedView,
   },
 
+
   data() {
     return {
       showSidebar: false,
@@ -40,8 +42,12 @@ export default {
     };
   },
   methods: {
+      togglePlay() {
+      this.$emit('toggle-play');
+    },
+
     handleFullscreen() {
-      emit('on-toggle-fullscreen');
+       emit('toggleFullscreen')
     },
     playSelectedPlaylist(playlist) {
       this.$emit('play', playlist);
@@ -57,7 +63,10 @@ export default {
       this.$refs.mediaPlayerComponent.toggleFullscreen();
     },
   },
+
 };
+
+
 
 </script>
 
