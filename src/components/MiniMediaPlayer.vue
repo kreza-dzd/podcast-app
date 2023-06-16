@@ -56,9 +56,16 @@ export default {
     };
   },
   methods: {
-    togglePlay() {
-      this.$emit('toggle-play');
-    },
+    play() {
+    if (!this.isPlaying) {
+      this.togglePlay();
+    }
+  },
+  togglePlay() {
+    this.isPlaying = !this.isPlaying;
+    this.$emit('toggle-play');
+  },
+
     previous() {
       this.$emit('previous');
     },
@@ -136,4 +143,3 @@ input[type="range"]::-moz-range-thumb {
   cursor: pointer;
 }
 </style>
-
