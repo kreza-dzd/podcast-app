@@ -43,7 +43,8 @@ const audioPlayer = reactive(new Audio());
 const currentPlaylist = ref(null);
 const isPlaying = ref(false);
 
-const emit = defineEmits(['toggleFullscreen', 'play', 'playPreview']);
+const emit = defineEmits(['toggleFullscreen', 'play', 'playPreview', 'togglePlay']);
+
 
 
 
@@ -80,6 +81,7 @@ const getSpotifyAccessToken = async () => {
   );
 };
 
+
 const fetchFeaturedPlaylists = async (accessToken) => {
   try {
     const response = await axios.get('https://api.spotify.com/v1/browse/featured-playlists', {
@@ -114,37 +116,41 @@ const fetchFeaturedPlaylists = async (accessToken) => {
   }
 };
 
-let mediaPlayerStyle = () => {
-  // Access the media player.
-  let mediaPlayer = document.querySelector('.mini-media-player');
-  if (mediaPlayer) {
-    // Change the background color to #f4f3f3 and add other styles.
-    mediaPlayer.style.backgroundColor = '#f4f3f3';
-    mediaPlayer.style.position = 'fixed';
-    mediaPlayer.style.bottom = '0';
-    mediaPlayer.style.left = '0';
-    mediaPlayer.style.right = '0';
-    mediaPlayer.style.display = 'flex';
-    mediaPlayer.style.justifyContent = 'center';
-    mediaPlayer.style.zIndex = '1000';
-    mediaPlayer.style.marginBottom = '3rem';
-    mediaPlayer.style.marginLeft = '1.5rem';
-    mediaPlayer.style.borderRadius = '10px';
-    mediaPlayer.style.width = '90%';
-  }
-}
+
 
 
 
 
 const playPreview = (playlist) => {
-  currentPlaylist.value = playlist;
-  // Assuming that each playlist has a previewUrl
-  audioPlayer.src = playlist.previewUrl;
-  audioPlayer.play();
-  isPlaying.value = true;
-  mediaPlayerStyle(playlist);
-  emit('playPreview', playlist);
+  // Transform playlist to match the object structure expected by handleTrackClick
+  const playlistTransformed = {
+    id: playlist.id,
+    name: playlist.name,
+    duration_ms: playlist.duration_ms,  // ensure these properties exist on playlist
+    preview_url: playlist.preview_url,  // ensure these properties exist on playlist
+  };
+  
+  handleTrackClick(playlistTransformed);
+}
+
+const handleTrackClick = (item) => {
+  const transformedItem = {
+    id: item.id,
+    title: item.name,
+    duration: item.duration_ms,
+    audioPreviewUrl: item.preview_url,
+    // Include other properties you might need
+  };
+  
+  emit('play', transformedItem);  // Changed from this.$emit('play', transformedItem);
+  setPreviewUrl(item.preview_url, item);
+  toggleFullscreen();
+}
+
+
+const setPreviewUrl = (preview_url, item) => {
+  audioPlayer.src = preview_url;
+  currentPlaylist.value = item;
 };
 
 
