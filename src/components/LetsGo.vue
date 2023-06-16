@@ -13,12 +13,11 @@
         </tr>
       </thead>
       <tbody>
-  
-    <tr
-         v-for="(item, index) in state.tracks"
-        :key="index"
-        :class="{ 'even-row': index % 2 === 1 }"
-       @click="$emit('on-play-preview', item.preview_url, item); $emit('on-toggle-fullscreen')"
+        <tr
+          v-for="(item, index) in state.tracks"
+          :key="index"
+          :class="{ 'even-row': index % 2 === 1 }"
+          @click="handleTrackClick(item)"
         >
           <td>{{ item.artists[0].name }}</td>
           <td>{{ item.name }}</td>
@@ -35,20 +34,75 @@
       </tbody>
     </table>
   </div>
+  <FeaturedView 
+  @playPreview="setPreviewUrl" 
+  @play="playSelectedPlaylist" 
+  @toggleFullscreen="toggleFullscreen"
+  />
 </template>
 
 <script setup>
-import { defineProps, reactive, defineExpose, defineEmits } from 'vue';
+import { defineProps, reactive, defineExpose, defineEmits,ref } from 'vue';
+import FeaturedView from '@/components/FeaturedView.vue';
 
-const emit = defineEmits(['show-table', 'on-play-preview', 'on-toggle-fullscreen', 'request-tracks', 'play']);
+
+const emit = defineEmits([
+  'show-table', 
+  'on-play-preview', 
+  'toggleFullscreen', 
+  'request-tracks', 
+  'play',
+  'remove-media-player',
+  'toggle-play'
+]);
+
+
+
+
+let showSidebar = ref(false);
+let featuredPlaylists = ref([]);
+let audioPreviewUrl = ref(null);
+let podcast = ref(null);
 
 const clientId = '17e41028c79e4f128a873410a112bd0e';
 const clientSecret = 'de2b9acdd949438588e2a21958897c3f';
 
 const encodedAuth = btoa(`${clientId}:${clientSecret}`);
+
 const state = reactive({
   tracks: [],
 });
+
+const togglePlay = () => {
+  emit('toggle-play');
+}
+
+const toggleFullscreen = () => {
+  emit('toggleFullscreen');
+}
+
+
+const playSelectedPlaylist = (playlist) => {
+  emit('play', playlist);
+}
+
+
+
+const toggleSidebar = () => {
+  showSidebar.value = !showSidebar.value;
+}
+
+const setPreviewUrl = (url, podcastInstance) => {
+  audioPreviewUrl.value = url;
+  podcast.value = podcastInstance;
+}
+
+const handleTrackClick = (item) => {
+  emit('on-play-preview', item.preview_url, item); 
+  emit('toggleFullscreen'); 
+}
+
+
 const props = defineProps({
   searchQuery: String,
   showTable: Boolean,
@@ -93,6 +147,13 @@ const formatDuration = (duration) => {
 
 defineExpose({
   requestTracks,
+  togglePlay,
+  toggleFullscreen,
+  handleTrackClick,
+  playSelectedPlaylist,
+  toggleSidebar,
+  setPreviewUrl,
+  featuredPlaylists
 });
 </script>
 
