@@ -53,8 +53,10 @@ const emit = defineEmits([
   'request-tracks', 
   'play',
   'remove-media-player',
-  'toggle-play'
+  'toggle-play',
+  'playPreview' 
 ]);
+
 
 
 
