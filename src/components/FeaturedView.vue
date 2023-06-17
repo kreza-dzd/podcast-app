@@ -41,7 +41,12 @@ const audioPlayer = reactive(new Audio());
 const currentPlaylist = ref(null);
 const isPlaying = ref(false);
 
-const emit = defineEmits(['toggleFullscreen', 'play']);
+const emit = defineEmits([
+  'toggleFullscreen', 
+  'play', 
+  'playPreview' // added this line
+]);
+
 
 onMounted(async () => {
   const response = await getSpotifyAccessToken();
