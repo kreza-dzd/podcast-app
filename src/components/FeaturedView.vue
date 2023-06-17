@@ -9,60 +9,45 @@
         @click="playPreview(playlist)"
         @dblclick="toggleFullscreen"
       >
-        <img :src="getImageUrl(playlist)" :alt="getName(playlist)" />
-        <div class="playlist-name">{{ getName(playlist) }}</div>
+        <img :src="playlist.images[0]?.url" :alt="playlist.name" />
+        <div class="playlist-name">{{ playlist.name }}</div>
       </div>
     </div>
   </div>
   <MiniMediaPlayer
-  v-show="isPlaying"
-  :podcast="currentPlaylist"
-  :audioElement="audioPlayer"
-  :showMiniPlayer="true"
-  @toggle-play="props.togglePlay"
-  @previous="previous"
-  @next="next"
-  @seek="seek"
-/>
-
+    v-show="isPlaying"
+    :podcast="currentPlaylist"
+    :audioElement="audioPlayer"
+    :showMiniPlayer="true"
+    @toggle-play="props.togglePlay"
+    @previous="previous"
+    @next="next"
+    @seek="seek"
+  />
 </template>
 
 <script setup>
-
-
 import MiniMediaPlayer from "@/components/MiniMediaPlayer.vue";
-import { ref, onMounted, reactive, defineProps, defineEmits} from 'vue';
+import { ref, onMounted, reactive, defineProps, defineEmits } from 'vue';
+import axios from 'axios';
 
 const props = defineProps({
   togglePlay: Function,
   featuredPlaylists: Array, 
 });
-import axios from 'axios';
+
 const featuredPlaylists = ref([]);
 const audioPlayer = reactive(new Audio());
 const currentPlaylist = ref(null);
 const isPlaying = ref(false);
 
-const emit = defineEmits(['toggleFullscreen', 'play', 'playPreview', 'togglePlay']);
-
-
-
+const emit = defineEmits(['toggleFullscreen', 'play']);
 
 onMounted(async () => {
   const response = await getSpotifyAccessToken();
   const accessToken = response.data.access_token;
   await fetchFeaturedPlaylists(accessToken);
 });
-
-
-// Other methods...
-const getImageUrl = (playlist) => {
-  return playlist.images && playlist.images[0] ? playlist.images[0].url : "";
-};
-
-const getName = (playlist) => {
-  return playlist ? playlist.name : "";
-};
 
 const getSpotifyAccessToken = async () => {
   const clientId = '17e41028c79e4f128a873410a112bd0e';
@@ -81,7 +66,6 @@ const getSpotifyAccessToken = async () => {
   );
 };
 
-
 const fetchFeaturedPlaylists = async (accessToken) => {
   try {
     const response = await axios.get('https://api.spotify.com/v1/browse/featured-playlists', {
@@ -97,13 +81,11 @@ const fetchFeaturedPlaylists = async (accessToken) => {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        // Only return the preview URL if it is not null
         const previewUrl = tracksResponse.data.items[0]?.track?.preview_url;
         return previewUrl !== null ? previewUrl : undefined;
       })
     );
 
-    // Filter out playlists without a preview URL for the first track
     let itemsWithPreview = response.data.playlists.items.filter((_, index) => previewUrls[index] !== undefined);
     previewUrls = previewUrls.filter(url => url !== undefined);
 
@@ -116,43 +98,23 @@ const fetchFeaturedPlaylists = async (accessToken) => {
   }
 };
 
-
-
-
-
-
 const playPreview = (playlist) => {
-  // Transform playlist to match the object structure expected by handleTrackClick
-  const playlistTransformed = {
-    id: playlist.id,
-    name: playlist.name,
-    duration_ms: playlist.duration_ms,  // ensure these properties exist on playlist
-    preview_url: playlist.preview_url,  // ensure these properties exist on playlist
-  };
-  
-  handleTrackClick(playlistTransformed);
-}
-
-const handleTrackClick = (item) => {
   const transformedItem = {
-    id: item.id,
-    title: item.name,
-    duration: item.duration_ms,
-    audioPreviewUrl: item.preview_url,
-    // Include other properties you might need
+    id: playlist.id,
+    title: playlist.name,
+    duration: playlist.duration_ms,
+    audioPreviewUrl: playlist.preview_url,
   };
-  
-  emit('play', transformedItem);  // Changed from this.$emit('play', transformedItem);
-  setPreviewUrl(item.preview_url, item);
+  emit('play', transformedItem);
+  audioPlayer.src = playlist.previewUrl;
+  audioPlayer.play();
+  currentPlaylist.value = transformedItem;
   toggleFullscreen();
-}
-
-
-const setPreviewUrl = (preview_url, item) => {
-  audioPlayer.src = preview_url;
-  currentPlaylist.value = item;
 };
 
+const toggleFullscreen = () => {
+  emit('toggleFullscreen');
+};
 
 const next = () => {
   const currentIndex = featuredPlaylists.value.findIndex(
@@ -174,11 +136,6 @@ const previous = () => {
 
 const seek = (time) => {
   audioPlayer.currentTime = time;
-};
-
-
-const toggleFullscreen = () => {
-   emit('toggleFullscreen')
 };
 </script>
 
@@ -210,6 +167,4 @@ img {
   width: 100%;
   height: auto;
 }
-
-
 </style>
