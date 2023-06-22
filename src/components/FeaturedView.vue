@@ -3,55 +3,38 @@
     <h2 class="section-title">Featured</h2>
     <div class="box-wrapper">
       <div
-        v-for="(playlist, index) in featuredPlaylists.slice(0, 5)"
+        v-for="(track, index) in featuredTracks.slice(0, 5)"
         :key="index"
         :class="`box-${index + 1}`"
-        @click="playPreview(playlist)"
+        @click="playPreview(track)"
         @dblclick="toggleFullscreen"
       >
-        <img :src="playlist.images[0]?.url" :alt="playlist.name" />
-        <div class="playlist-name">{{ playlist.name }}</div>
+        <img :src="track.album.images[0]?.url" :alt="track.name" />
+        <div class="track-name">{{ track.name }}</div>
+        <div class="track-artist">{{ track.artists[0].name }}</div>
+        <div class="track-album">{{ track.album.name }}</div>
       </div>
     </div>
   </div>
-  <MiniMediaPlayer
-    v-show="isPlaying"
-    :podcast="currentPlaylist"
-    :audioElement="audioPlayer"
-    :showMiniPlayer="true"
-    @toggle-play="props.togglePlay"
-    @previous="previous"
-    @next="next"
-    @seek="seek"
-  />
 </template>
 
 <script setup>
-import MiniMediaPlayer from "@/components/MiniMediaPlayer.vue";
-import { ref, onMounted, reactive, defineProps, defineEmits } from 'vue';
+import { ref, onMounted, reactive, defineEmits } from 'vue';
 import axios from 'axios';
 
-const props = defineProps({
-  togglePlay: Function,
-  featuredPlaylists: Array, 
-});
-
-const featuredPlaylists = ref([]);
+const featuredTracks = ref([]);
 const audioPlayer = reactive(new Audio());
 const currentPlaylist = ref(null);
-const isPlaying = ref(false);
 
 const emit = defineEmits([
   'toggleFullscreen', 
-  'play', 
-  'playPreview' // added this line
+  'play'
 ]);
-
 
 onMounted(async () => {
   const response = await getSpotifyAccessToken();
   const accessToken = response.data.access_token;
-  await fetchFeaturedPlaylists(accessToken);
+  await fetchFeaturedTracks(accessToken);
 });
 
 const getSpotifyAccessToken = async () => {
@@ -71,7 +54,7 @@ const getSpotifyAccessToken = async () => {
   );
 };
 
-const fetchFeaturedPlaylists = async (accessToken) => {
+const fetchFeaturedTracks = async (accessToken) => {
   try {
     const response = await axios.get('https://api.spotify.com/v1/browse/featured-playlists', {
       headers: {
@@ -79,39 +62,35 @@ const fetchFeaturedPlaylists = async (accessToken) => {
       },
     });
 
-    let previewUrls = await Promise.all(
-      response.data.playlists.items.map(async (playlist) => {
-        const tracksResponse = await axios.get(playlist.tracks.href, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        const previewUrl = tracksResponse.data.items[0]?.track?.preview_url;
-        return previewUrl !== null ? previewUrl : undefined;
-      })
-    );
+    let trackPromises = response.data.playlists.items.map(async (playlist) => {
+      const tracksResponse = await axios.get(playlist.tracks.href, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const track = tracksResponse.data.items[0]?.track;
+      return track?.preview_url ? track : undefined;
+    });
 
-    let itemsWithPreview = response.data.playlists.items.filter((_, index) => previewUrls[index] !== undefined);
-    previewUrls = previewUrls.filter(url => url !== undefined);
-
-    featuredPlaylists.value = itemsWithPreview.map((playlist, index) => ({
-      ...playlist,
-      previewUrl: previewUrls[index],
-    }));
+    let tracksWithPreview = await Promise.all(trackPromises);
+    featuredTracks.value = tracksWithPreview.filter(track => track !== undefined);
   } catch (error) {
     console.error(error);
   }
 };
 
-const playPreview = (playlist) => {
+const playPreview = (track) => {
   const transformedItem = {
-    id: playlist.id,
-    title: playlist.name,
-    duration: playlist.duration_ms,
-    audioPreviewUrl: playlist.preview_url,
+    id: track.id,
+    title: track.name,
+    artist: track.artists[0].name,
+    album: track.album.name,
+    duration: track.duration_ms,
+    image: track.album.images[0]?.url,
+    audioPreviewUrl: track.preview_url,
   };
-  emit('play', transformedItem);
-  audioPlayer.src = playlist.previewUrl;
+  emit('play', track);
+  audioPlayer.src = track.preview_url;
   audioPlayer.play();
   currentPlaylist.value = transformedItem;
   toggleFullscreen();
@@ -119,28 +98,6 @@ const playPreview = (playlist) => {
 
 const toggleFullscreen = () => {
   emit('toggleFullscreen');
-};
-
-const next = () => {
-  const currentIndex = featuredPlaylists.value.findIndex(
-    playlist => playlist.id === currentPlaylist.value.id
-  );
-  if (currentIndex < featuredPlaylists.value.length - 1) {
-    playPreview(featuredPlaylists.value[currentIndex + 1]);
-  }
-};
-
-const previous = () => {
-  const currentIndex = featuredPlaylists.value.findIndex(
-    playlist => playlist.id === currentPlaylist.value.id
-  );
-  if (currentIndex > 0) {
-    playPreview(featuredPlaylists.value[currentIndex - 1]);
-  }
-};
-
-const seek = (time) => {
-  audioPlayer.currentTime = time;
 };
 </script>
 
