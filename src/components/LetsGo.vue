@@ -39,11 +39,18 @@
   @play="playSelectedPlaylist" 
   @toggleFullscreen="toggleFullscreen"
   />
+  <NewView
+  @playPreview="setPreviewUrl" 
+  @play="playSelectedPlaylist" 
+  @toggleFullscreen="toggleFullscreen"
+  />
+
 </template>
 
 <script setup>
 import { defineProps, reactive, defineExpose, defineEmits,ref } from 'vue';
 import FeaturedView from '@/components/FeaturedView.vue';
+import NewView from '@/components/NewView.vue';
 
 
 const emit = defineEmits([
@@ -100,6 +107,7 @@ const setPreviewUrl = (url, podcastInstance) => {
 }
 
 const handleTrackClick = (item) => {
+  console.log(item); 
   emit('on-play-preview', item.preview_url, item); 
   emit('toggleFullscreen'); 
 }
