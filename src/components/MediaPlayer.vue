@@ -145,6 +145,7 @@ handleButtonRemoveClick() {
         }
       },
       togglePlay() {
+ 
     if (!this.$refs.audio) return;
     if (this.$refs.audio.paused) {
       this.$refs.audio.play();
