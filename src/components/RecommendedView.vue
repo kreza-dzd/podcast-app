@@ -9,7 +9,10 @@
         @click="playAlbumPreview(album, index)"
         @dblclick="toggleFullscreen"
       >
-        <img :src="album.album.images[0].url" :alt="album.name" />
+        <img :src="album.images[0].url" :alt="album.name" />
+
+
+
         <div class="album-name">{{ album.name }}</div>
       </div>
     </div>
@@ -96,7 +99,6 @@ const playAlbumPreview = async (album, index) => {
   }
 };
 
-
 const fetchRecommendedAlbums = async (accessToken) => {
   try {
     const seed_genres = 'pop';
@@ -106,11 +108,16 @@ const fetchRecommendedAlbums = async (accessToken) => {
       },
     });
 
-    recommendedAlbums.value = response.data.tracks;
+    // Extract album from each track and form an array of unique albums
+    const albums = response.data.tracks.map(track => track.album);
+    const uniqueAlbums = [...new Map(albums.map(album => [album['id'], album])).values()];
+
+    recommendedAlbums.value = uniqueAlbums;
   } catch (error) {
     console.error(error);
   }
 };
+
 
 const playPreview = (track, album) => {
   // Add album to track object if not already present
