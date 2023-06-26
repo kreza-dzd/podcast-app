@@ -6,6 +6,8 @@
         v-for="(album, index) in recommendedAlbums.slice(0, 5)"
         :key="index"
         :class="`box-${index + 1}`"
+        @click="playAlbumPreview(album, index)"
+        @dblclick="toggleFullscreen"
       >
         <img :src="album.album.images[0].url" :alt="album.name" />
         <div class="album-name">{{ album.name }}</div>
@@ -15,19 +17,28 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineEmits, reactive  } from 'vue';
 import axios from 'axios';
 
 const recommendedAlbums = ref([]);
+let accessToken = null;
+const audioPlayer = reactive(new Audio());
+const currentPlaylist = ref(null);
+
+const emit = defineEmits([
+  'toggleFullscreen', 
+  'play'
+]);
 
 onMounted(async () => {
   // Get Spotify access token
   const response = await getSpotifyAccessToken();
-  const accessToken = response.data.access_token;
+  accessToken = response.data.access_token; 
 
   // Fetch recommended albums
   await fetchRecommendedAlbums(accessToken);
 });
+
 
 const getSpotifyAccessToken = async () => {
   const clientId = '17e41028c79e4f128a873410a112bd0e';
@@ -46,6 +57,46 @@ const getSpotifyAccessToken = async () => {
   );
 };
 
+const playNextPreview = async (albums, currentAlbumIndex) => {
+  for(let i = currentAlbumIndex + 1; i < albums.length; i++) {
+    const album = albums[i];
+    const response = await axios.get(`https://api.spotify.com/v1/albums/${album.id}/tracks`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    if(response.data.items.length > 0 && response.data.items[0].preview_url) {
+      playPreview(response.data.items[0]);
+      break;
+    }
+  }
+};
+
+
+
+const playAlbumPreview = async (album, index) => {
+
+  try {
+
+    const response = await axios.get(`https://api.spotify.com/v1/albums/${album.id}/tracks`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if(response.data.items.length > 0 && response.data.items[0].preview_url) {
+      // Pass the album object along with the track
+      playPreview(response.data.items[0], album);
+    } else {
+      console.log('No tracks available in this album. Skipping to next...');
+      playNextPreview(recommendedAlbums.value, index);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
 const fetchRecommendedAlbums = async (accessToken) => {
   try {
     const seed_genres = 'pop';
@@ -59,6 +110,38 @@ const fetchRecommendedAlbums = async (accessToken) => {
   } catch (error) {
     console.error(error);
   }
+};
+
+const playPreview = (track, album) => {
+  // Add album to track object if not already present
+  if (!track.album) {
+    track.album = album;
+  }
+
+  const transformedItem = {
+    id: track.id,
+    title: track.name,
+    artist: track.artists && track.artists.length > 0 ? track.artists[0].name : 'Unknown Artist',
+    album: track.album ? track.album.name : 'Unknown Album',
+    duration: track.duration_ms,
+    image: track.album && track.album.images && track.album.images.length > 0 ? track.album.images[0]?.url : 'No Image',
+    audioPreviewUrl: track.preview_url,
+  };
+  
+  if (track.preview_url) {
+    emit('play', track);
+    audioPlayer.src = track.preview_url;
+    audioPlayer.play();
+    currentPlaylist.value = transformedItem;
+    toggleFullscreen();
+  } else {
+    console.log(`No preview available for track ${track.id}`);
+  }
+};
+
+
+const toggleFullscreen = () => {
+  emit('toggleFullscreen');
 };
 </script>
 
