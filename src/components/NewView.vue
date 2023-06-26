@@ -36,7 +36,7 @@ const emit = defineEmits([
 onMounted(async () => {
  // Get Spotify access token
  const response = await getSpotifyAccessToken();
- const accessToken = response.data.access_token;
+  accessToken = response.data.access_token;
 
  // Fetch new releases
  await fetchNewReleases(accessToken);
