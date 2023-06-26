@@ -44,6 +44,11 @@
   @play="playSelectedPlaylist" 
   @toggleFullscreen="toggleFullscreen"
   />
+  <RecommendedView
+  @playPreview="setPreviewUrl" 
+  @play="playSelectedPlaylist" 
+  @toggleFullscreen="toggleFullscreen"
+  />
 
 </template>
 
@@ -51,6 +56,7 @@
 import { defineProps, reactive, defineExpose, defineEmits,ref } from 'vue';
 import FeaturedView from '@/components/FeaturedView.vue';
 import NewView from '@/components/NewView.vue';
+import RecommendedView from '@/components/RecommendedView.vue';
 
 
 const emit = defineEmits([
