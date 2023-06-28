@@ -13,7 +13,7 @@
      <img src="./assets/CD.jpg" alt="User Profile" />
       </div>
        <div class="search-container">
-      <input type="text" placeholder="Search" v-model="searchQuery" @keyup.enter="requestTracks"/>
+      <input type="text" placeholder="" v-model="searchQuery" @keyup.enter="requestTracks"/>
       <LetsGo ref="letsgoComponent" @on-play-preview="setPreviewUrl" :search-query="searchQuery" @toggleFullscreen="toggleFullscreen" :show-table="showTable" @request-tracks="requestTracksFromInput" @show-table="showTable = true" @play="handlePlay"/>
 
 
@@ -120,3 +120,28 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+header {
+  background-color: rgb(70, 71, 70);
+}
+
+.search-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: darkblue;
+  font-size: 20px;
+}
+
+.search-button:focus {
+  outline: none;
+}
+
+.search-button:hover {
+  color: #ccc; /* You can choose your preferred hover color */
+}
+.app-title {
+  color: #004C4C;
+}
+</style>
