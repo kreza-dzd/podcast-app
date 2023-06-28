@@ -1,6 +1,10 @@
 <template>
   <div>
-    <button @click="requestTracks">Search for a track</button>
+
+<button id="searchButton" @click="requestTracks">
+  <i class="fas fa-search"></i> Search
+</button>
+
 
     <table v-show="showTable">
       <thead v-if="showTableHeader">
@@ -174,6 +178,30 @@ defineExpose({
 </script>
 
 <style scoped>
+
+
+#searchButton {
+  font-size: 16px;
+  color:whitesmoke;
+  background-color: gray;
+  border: none;
+  border-radius: 7px;
+  padding: 5px 35px;
+  margin-top: 1rem;
+  margin-left: 0.8rem;
+  font-family: 'Passion One', cursive;
+  cursor: pointer;
+text-transform: capitalize;
+  transition: background-color 0.3s ease;
+}
+
+#searchButton:hover {
+  background-color: #004C4C;
+}
+
+#searchButton i {
+  margin-right: 5px;
+}
 
 table {
   width: 100%;
