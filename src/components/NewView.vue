@@ -58,19 +58,39 @@ const getSpotifyAccessToken = async () => {
    }
  );
 };
-
 const fetchNewReleases = async (accessToken) => {
- try {
-   const response = await axios.get('https://api.spotify.com/v1/browse/new-releases', {
-     headers: {
-       Authorization: `Bearer ${accessToken}`,
-     },
-   });
+  try {
+    const response = await axios.get('https://api.spotify.com/v1/browse/new-releases', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
 
-   newReleases.value = response.data.albums.items;
- } catch (error) {
-   console.error(error);
- }
+    let albums = response.data.albums.items;
+    newReleases.value = await filterAlbumsWithPreviews(albums, accessToken);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const filterAlbumsWithPreviews = async (albums, accessToken) => {
+  let albumsWithPreviews = [];
+
+  for (let album of albums) {
+    const response = await axios.get(`https://api.spotify.com/v1/albums/${album.id}/tracks`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const hasPreview = response.data.items.some(track => track.preview_url !== null);
+    
+    if(hasPreview) {
+      albumsWithPreviews.push(album);
+    }
+  }
+
+  return albumsWithPreviews;
 };
 
 
