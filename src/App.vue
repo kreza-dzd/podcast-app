@@ -122,8 +122,12 @@ export default {
 </script>
 
 <style scoped>
-header {
+#app {
   background-color: rgb(70, 71, 70);
+}
+
+header {
+  padding-top: 1em;
 }
 
 .search-button {
@@ -143,5 +147,6 @@ header {
 }
 .app-title {
   color: #004C4C;
+  margin-top: 0.5rem;
 }
 </style>
