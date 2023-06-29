@@ -2,7 +2,7 @@
   <div>
 
 <button id="searchButton" @click="requestTracks">
-  <i class="fas fa-search"></i> Search
+  <i class="fas fa-search"></i> SEARCH
 </button>
 
 
