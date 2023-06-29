@@ -112,11 +112,32 @@ const fetchRecommendedAlbums = async (accessToken) => {
     const albums = response.data.tracks.map(track => track.album);
     const uniqueAlbums = [...new Map(albums.map(album => [album['id'], album])).values()];
 
-    recommendedAlbums.value = uniqueAlbums;
+    recommendedAlbums.value = await filterAlbumsWithPreviews(uniqueAlbums, accessToken);
   } catch (error) {
     console.error(error);
   }
 };
+
+const filterAlbumsWithPreviews = async (albums, accessToken) => {
+  let albumsWithPreviews = [];
+
+  for (let album of albums) {
+    const response = await axios.get(`https://api.spotify.com/v1/albums/${album.id}/tracks`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const hasPreview = response.data.items.some(track => track.preview_url !== null);
+    
+    if(hasPreview) {
+      albumsWithPreviews.push(album);
+    }
+  }
+
+  return albumsWithPreviews;
+};
+
 
 
 const playPreview = (track, album) => {
