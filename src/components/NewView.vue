@@ -20,12 +20,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted,reactive, defineEmits  } from 'vue';
+import { ref, onMounted, defineEmits } from 'vue';
 import axios from 'axios';
+import { useStore } from 'vuex';
 
 const newReleases = ref([]);
-const audioPlayer = reactive(new Audio());
-const currentPlaylist = ref(null);
+const store = useStore();
 let accessToken = null;
 
 const emit = defineEmits([
@@ -146,9 +146,11 @@ const playPreview = (track, album) => {
   
   if (track.preview_url) {
     emit('play', track);
-    audioPlayer.src = track.preview_url;
-    audioPlayer.play();
-    currentPlaylist.value = transformedItem;
+    store.commit('setAudioPlayerSource', track.preview_url);
+    store.commit('playAudio');
+    store.commit('setCurrentPlayingTrack', transformedItem);
+    store.commit('playNewTrack', track.preview_url);
+
     toggleFullscreen();
   } else {
     console.log(`No preview available for track ${track.id}`);
