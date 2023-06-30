@@ -7,12 +7,12 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 import App from './App.vue';
 import router from './router';
+import store from './store'; // Path to your Vuex store file
 
 library.add(fas);
 
 const app = createApp(App);
 app.component('font-awesome-icon', FontAwesomeIcon);
 app.use(router);
+app.use(store);  // Use Vuex store here
 app.mount('#app');
-
-
