@@ -162,7 +162,6 @@ const playPreview = (track, album) => {
     store.commit('playAudio');
     store.commit('setCurrentPlayingTrack', transformedItem);
     store.commit('playNewTrack', track.preview_url);
-
     toggleFullscreen();
   } else {
     console.log(`No preview available for track ${track.id}`);
