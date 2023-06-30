@@ -189,7 +189,6 @@ defineExpose({
   padding: 5px 35px;
   margin-top: 1rem;
   margin-left: 0.8rem;
-  font-family: 'Passion One', cursive;
   cursor: pointer;
 text-transform: capitalize;
   transition: background-color 0.3s ease;
