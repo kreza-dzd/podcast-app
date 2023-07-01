@@ -148,9 +148,9 @@ const playPreview = (track, album) => {
 
   const transformedItem = {
     id: track.id,
-    title: track.name,
-    artist: track.artists && track.artists.length > 0 ? track.artists[0].name : 'Unknown Artist',
-    album: track.album ? track.album.name : 'Unknown Album',
+    name: track.name,
+    artists: track.artists,
+    album: track.album,
     duration: track.duration_ms,
     image: track.album && track.album.images && track.album.images.length > 0 ? track.album.images[0]?.url : 'No Image',
     audioPreviewUrl: track.preview_url,
