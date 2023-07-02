@@ -115,7 +115,6 @@ const setPreviewUrl = (url, podcastInstance) => {
   audioPreviewUrl.value = url;
   podcast.value = podcastInstance;
 }
-
 const handleTrackClick = (item) => {
   console.log(item); 
   emit('on-play-preview', item.preview_url, item); 
@@ -132,7 +131,6 @@ const props = defineProps({
 const requestTracks = async () => {
   emit('show-table');
   
-
   try {
     const tokenResponse = await fetch('https://accounts.spotify.com/api/token', {
       method: 'POST',
@@ -153,11 +151,13 @@ const requestTracks = async () => {
     });
 
     const trackData = await trackResponse.json();
-    state.tracks = trackData.tracks.items;
+    // Filter out tracks without preview_url
+    state.tracks = trackData.tracks.items.filter(item => item.preview_url);
   } catch (error) {
     console.error(error);
   }
 };
+
 
 const formatDuration = (duration) => {
   const seconds = Math.floor((duration / 1000) % 60);
