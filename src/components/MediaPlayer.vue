@@ -197,7 +197,7 @@ handleButtonRemoveClick() {
     },
     watch: {
       audioPreviewUrl() {
-        console.log(this.audioPreviewUrl);
+        
         this.$nextTick(() => {
           this.playPreview();
           this.duration = 0;
