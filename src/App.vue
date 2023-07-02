@@ -1,17 +1,19 @@
 <template>
   <div id="app">
     <header>
-      <button class="menu-toggle" @click="toggleSidebar">
-        <span class="menu-line" :class="{ active: showSidebar }" />
-        <span class="menu-line" :class="{ active: showSidebar }" />
-        <span class="menu-line" :class="{ active: showSidebar }" />
-      </button>
-      <router-link to="/">
-        <h1 class="app-title" @click="showTable = false; clearInputField()">My App</h1>
-      </router-link>
-       <div class="user-profile">
-     <img src="./assets/CD.jpg" alt="User Profile" />
-      </div>
+        <button class="menu-toggle" @click="toggleSidebar">
+          <span class="menu-line" :class="{ active: showSidebar }" />
+          <span class="menu-line" :class="{ active: showSidebar }" />
+          <span class="menu-line" :class="{ active: showSidebar }" />
+        </button>
+        <router-link to="/">
+          <h1 class="app-title-container" @click="showTable = false; clearInputField()">
+          <span class="app-title">My App</span>
+        </h1>
+        </router-link>
+        <div class="user-profile">
+          <img src="./assets/CD.jpg" alt="User Profile" />
+        </div>
        <div class="search-container">
       <input type="text" placeholder="" v-model="searchQuery" @keyup.enter="requestTracks"/>
       <LetsGo ref="letsgoComponent" @on-play-preview="setPreviewUrl" :search-query="searchQuery" @toggleFullscreen="toggleFullscreen" :show-table="showTable" @request-tracks="requestTracksFromInput" @show-table="showTable = true" @play="handlePlay"/>
@@ -145,8 +147,23 @@ header {
 .search-button:hover {
   color: #ccc; /* You can choose your preferred hover color */
 }
+
+.app-title-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .app-title {
-  color: #004C4C;
-  margin-top: 0.5rem;
+  color: blueviolet;
+  margin-top: 0rem;
+  background-color: white;
+  display: inline-block;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.router-link-active {
+  text-decoration: none;
+  color: inherit;
 }
 </style>
