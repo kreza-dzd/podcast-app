@@ -159,14 +159,14 @@ const playPreview = (track, album) => {
   if (track.preview_url) {
     emit('play', track);
     store.commit('setAudioPlayerSource', track.preview_url);
-    store.commit('playAudio');
     store.commit('setCurrentPlayingTrack', transformedItem);
-    store.commit('playNewTrack', track.preview_url);
+    store.dispatch('playNewTrack', track.preview_url); // Changed from commit to dispatch
     toggleFullscreen();
   } else {
     console.log(`No preview available for track ${track.id}`);
   }
 };
+
 
 
 const toggleFullscreen = () => {
