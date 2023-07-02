@@ -4,36 +4,54 @@ export default createStore({
   state: {
     currentPlayingTrack: null,
     audioPlayer: new Audio(),
-    isPlaying: false, // <-- new state property
+    isPlaying: false,
   },
   mutations: {
-    playNewTrack(state, newSource) {
-      state.audioPlayer.pause();
-      state.audioPlayer.src = newSource;
-      state.audioPlayer.play();
-      state.isPlaying = true; // <-- add this
-    },
     setCurrentPlayingTrack(state, track) {
       state.currentPlayingTrack = track;
     },
     setAudioPlayerSource(state, source) {
       state.audioPlayer.src = source;
     },
-    playAudio(state) {
-      state.audioPlayer.play();
-      state.isPlaying = true; // <-- add this
+    setPlayingState(state, playing) {
+      state.isPlaying = playing;
     },
-    pauseAudio(state) {
+  },
+  actions: {
+    playNewTrack({ state, commit }, newSource) {
+      state.audioPlayer.src = newSource;
+      var playPromise = state.audioPlayer.play();
+
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          commit('setPlayingState', true);
+        })
+        .catch(() => {
+          commit('setPlayingState', false);
+        });
+      }
+    },
+    resumeAudio({ state, commit }) {
+      var playPromise = state.audioPlayer.play();
+
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          commit('setPlayingState', true);
+        })
+        .catch(() => {
+          commit('setPlayingState', false);
+        });
+      }
+    },
+    pauseAudio({ state, commit }) {
       state.audioPlayer.pause();
-      state.isPlaying = false; // <-- add this
+      commit('setPlayingState', false);
     },
-    toggleAudio(state) { // <-- new mutation
+    toggleAudio({ state, dispatch }) {
       if (state.isPlaying) {
-        state.audioPlayer.pause();
-        state.isPlaying = false;
+        dispatch('pauseAudio');
       } else {
-        state.audioPlayer.play();
-        state.isPlaying = true;
+        dispatch('resumeAudio');
       }
     }
   },
