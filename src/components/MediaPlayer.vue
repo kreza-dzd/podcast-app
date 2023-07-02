@@ -171,12 +171,16 @@ handleButtonRemoveClick() {
       seek() {
         this.$refs.audio.currentTime = this.currentTime;
       },
-     playPreview() {
+   playPreview() {
     if (this.$refs.audio && this.audioPreviewUrl) {
+      this.$refs.audio.oncanplay = () => {
+        this.isPlaying = true;
+      };
       this.$refs.audio.currentTime = 0;
       this.$refs.audio.play();
     }
-  },
+},
+
       toggleFullscreen() {
       this.fullscreen = !this.fullscreen;
     },
@@ -196,7 +200,7 @@ handleButtonRemoveClick() {
   }
     },
     watch: {
-      audioPreviewUrl() {
+ audioPreviewUrl() {
         
         this.$nextTick(() => {
           this.playPreview();
