@@ -16,7 +16,7 @@
           <div class="progress-container">
             <span class="current-time">{{ formatDuration(currentTime) }}</span>
             <input v-if="podcast" type="range" min="0" :max="duration" v-model="currentTime" @change="seek" class="progress-bar" />
-            <span class="duration">{{ formatDuration(duration) }}</span>
+            <span class="duration">{{ formatDuration(duration, true) }}</span>
           </div>
           <div class="button-container">
             <button class="button fullscreen-only" @click="previous">
@@ -160,14 +160,19 @@ handleButtonRemoveClick() {
 },
 
 
-      formatDuration(duration, totalDuration = null) {
-  if (totalDuration !== null) {
-    duration = totalDuration - duration;
+ formatDuration(duration, isRemainingTime = false) {
+  let time = duration;
+
+  if (isRemainingTime) {
+    time = this.duration - this.currentTime;
   }
-  const seconds = Math.floor((duration / 1000) % 60);
-  const minutes = Math.floor((duration / (1000 * 60)) % 60);
+
+  const seconds = Math.floor((time / 1000) % 60);
+  const minutes = Math.floor((time / (1000 * 60)) % 60);
+  
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 },
+
       seek() {
         this.$refs.audio.currentTime = this.currentTime;
       },
