@@ -91,11 +91,17 @@ const playPreview = (track) => {
   };
   emit('play', track);
   store.commit('setAudioPlayerSource', track.preview_url);
-    store.commit('playAudio');
-    store.commit('setCurrentPlayingTrack', transformedItem);
-    store.commit('playNewTrack', track.preview_url);
+  
+  // commit the current playing track
+  store.commit('setCurrentPlayingTrack', transformedItem);
+
+  // dispatch the playNewTrack action
+  store.dispatch('playNewTrack', track.preview_url);
+
   toggleFullscreen();
 };
+
+
 
 const toggleFullscreen = () => {
   emit('toggleFullscreen');
