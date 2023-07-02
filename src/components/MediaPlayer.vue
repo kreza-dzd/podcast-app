@@ -50,10 +50,7 @@ import { mapState } from 'vuex';
   export default {
     props: {
     
-      audioPlayer: {
-    type: Object,
-    required: true,
-  },
+    
       podcast: {
         type: Object,
         required: false,
@@ -150,7 +147,7 @@ handleButtonRemoveClick() {
         }
       },
       togglePlay() {
-        this.$store.commit('toggleAudio');
+        this.$store.dispatch('toggleAudio');
     if (!this.$refs.audio) return;
     if (this.$refs.audio.paused) {
       this.$refs.audio.play();
