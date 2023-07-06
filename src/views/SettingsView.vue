@@ -1,10 +1,12 @@
 <template>
-    <div>
+
+    <div class="header">
       <button @click="closeSettings">
         <font-awesome-icon :icon="['fas', 'chevron-left']"/>
       </button>
       <h1>Settings</h1>
   
+    </div>
       <div class="settings">
         <div class="settings-content">
 
@@ -17,11 +19,11 @@
         </div>
       </div>
   
-    </div>
   </template>
   
   <script>
   export default {
+    emits: ['play', 'toggleFullscreen'],
     methods: {
     closeSettings() {
       this.$store.commit('TOGGLE_SIDEBAR');
@@ -55,12 +57,29 @@
 
 <style scoped>
 
+.header {
+  background-color: rgb(105, 106, 105);
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+.header button {
+  height: 25px;
+  width: 25px;
+  font-size: 18px;
+  position: absolute;
+   top: 20px;
+  left: 20px;
+  background-color: transparent;
+  color: #fff;
+  border: none;
+}
+
 h1 {
   text-align: center;
 }
 .settings {
 height: 100vh;
-  background-color: beige;
+background-color: rgb(70, 71, 70);
   text-align: center;
 }
 
