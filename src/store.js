@@ -7,8 +7,12 @@ export default createStore({
     isPlaying: false,
     isSettingsActive: false,
     showSidebar: false,
+    theme: 'dark',
   },
   mutations: {
+    setTheme(state, theme) {
+      state.theme = theme;
+    },
     TOGGLE_SIDEBAR(state) {
       state.showSidebar = !state.showSidebar;
     },
@@ -18,8 +22,8 @@ export default createStore({
     setCurrentPlayingTrack(state, track) {
       state.currentPlayingTrack = track;
     },
-    setAudioPlayerSource(state, source) {
-      state.audioPlayer.src = source;
+    async setAudioPlayerSource({ commit }, source) {
+      commit('setAudioPlayerSource', source);
     },
     setPlayingState(state, playing) {
       state.isPlaying = playing;
