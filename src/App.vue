@@ -1,11 +1,12 @@
 <template>
   <div id="app">
     <header v-if="!$store.state.isSettingsActive">
-        <button class="menu-toggle" @click="toggleSidebar">
-          <span class="menu-line" :class="{ active: showSidebar }" />
-          <span class="menu-line" :class="{ active: showSidebar }" />
-          <span class="menu-line" :class="{ active: showSidebar }" />
-        </button>
+      <button class="menu-toggle" @click="toggleSidebar">
+  <span class="menu-line" :class="{ active: $store.state.showSidebar }" />
+  <span class="menu-line" :class="{ active: $store.state.showSidebar }" />
+  <span class="menu-line" :class="{ active: $store.state.showSidebar }" />
+</button>
+
         <router-link to="/">
           <h1 class="app-title-container" @click="showTable = false; clearInputField()">
           <span class="app-title">My App</span>
