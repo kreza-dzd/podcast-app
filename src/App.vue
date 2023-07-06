@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="$store.state.theme + '-theme'">
     <header v-if="!$store.state.isSettingsActive">
       <button class="menu-toggle" @click="toggleSidebar">
   <span class="menu-line" :class="{ active: $store.state.showSidebar }" />
@@ -66,7 +66,9 @@ import MediaPlayer from "@/components/MediaPlayer.vue";
 
 
 
+
 export default {
+
   components: { LetsGo, MediaPlayer},
   data() {
     return {
@@ -82,6 +84,7 @@ export default {
       podcastList: []
     };
   },
+
   methods: {
  
     handlePlay(playlist) {
@@ -128,12 +131,40 @@ export default {
 </script>
 
 <style scoped>
+:root {
+  background-color:  rgb(70, 71, 70);
+  color: #F5F5DC;
+}
+
+.light-theme, .light-theme header, .light-theme main {
+  background-color: #F5F5DC;
+  color: #000000;
+}
+
+.light-theme .menu-line {
+  background-color: #000000; 
+}
+
+.dark-theme, .dark-theme header, .dark-theme main {
+  background-color: rgb(70, 71, 70);
+  color: #F5F5DC;
+}
+
+
+
+body {
+  background-color:  rgb(70, 71, 70);
+  color: #F5F5DC;
+}
+
 #app {
   background-color: rgb(70, 71, 70);
+
 }
 
 header {
   padding-top: 1em;
+
 }
 
 .search-button {
@@ -171,3 +202,4 @@ header {
   color: inherit;
 }
 </style>
+
