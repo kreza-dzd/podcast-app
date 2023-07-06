@@ -1,13 +1,13 @@
 <template>
 
-    <div class="header">
+<div class="header" :class="$store.state.theme + '-theme'">
       <button @click="closeSettings">
         <font-awesome-icon :icon="['fas', 'chevron-left']"/>
       </button>
       <h1>Settings</h1>
   
     </div>
-      <div class="settings">
+    <div class="settings" :class="$store.state.theme + '-theme'">
         <div class="settings-content">
 
           <label for="theme">Theme:</label>
@@ -42,20 +42,47 @@
   },
     data() {
       return {
-        theme: 'light',
+        theme: this.$store.state.theme,
       }
     },
     watch: {
-      theme(newTheme) {
-        // Dispatch an action or commit a mutation to your Vuex store
-        this.$store.commit('setTheme', newTheme);
-      },
-   
-    }
+  theme: {
+    handler(newTheme) {
+      this.$store.commit('setTheme', newTheme);
+    },
+    immediate: true, // to handle initial value
   }
+}
+  }
+
   </script>
 
-<style scoped>
+<style>
+
+.light-theme.header {
+  background-color: #d1d1be;
+  color: #000000;
+}
+
+.dark-theme.header {
+  background-color: rgb(105, 106, 105);
+  color: #F5F5DC;
+}
+
+.light-theme.settings {
+  background-color: #F5F5DC;
+  color: #000000;
+}
+
+.light-theme .header button {
+  color: #000000; 
+}
+
+
+.dark-theme.settings {
+  background-color: rgb(70, 71, 70);
+  color: #F5F5DC;
+}
 
 .header {
   background-color: rgb(105, 106, 105);
