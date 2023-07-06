@@ -186,7 +186,7 @@ handleButtonRemoveClick() {
     }
 },
 
-      toggleFullscreen() {
+toggleFullscreen() {
       this.fullscreen = !this.fullscreen;
     },
   removeMediaPlayer() {
