@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header>
+    <header v-if="!$store.state.isSettingsActive">
         <button class="menu-toggle" @click="toggleSidebar">
           <span class="menu-line" :class="{ active: showSidebar }" />
           <span class="menu-line" :class="{ active: showSidebar }" />
@@ -23,7 +23,7 @@
 
       </div>
     </header>
-    <div class="sidebar" :class="{ active: showSidebar }">
+    <div class="sidebar" :class="{ active: $store.state.showSidebar }" v-if="!$store.state.isSettingsActive">
       <nav>
         <ul>
         <li>
@@ -33,15 +33,19 @@
         </li>
         <li>
           <router-link to="/music" @click="toggleSidebar">
-              <a href="#"><font-awesome-icon :icon="['fas', 'podcast']" /> Podcast</a>
+              <a href="#"><font-awesome-icon :icon="['fas', 'podcast']" /> Podcasts</a>
         </router-link>
         </li>
         <li>
           <a href="#"><font-awesome-icon icon="book" /> Library</a>
         </li>
         <li>
-          <a href="#"><font-awesome-icon icon="user" /> Personal</a>
+       <router-link to="/settings">
+         <font-awesome-icon icon="user" /> Settings
+       </router-link>
         </li>
+
+
       </ul>
       </nav>
     </div>
@@ -49,8 +53,7 @@
       <router-view @play="handlePlay" @toggleFullscreen="toggleFullscreen"></router-view>
 
     </main>
-    <MediaPlayer ref="mediaPlayerComponent" :podcast="podcast" :audio-preview-url="audioPreviewUrl" :audio-player="audioElement" @remove-media-player="hideMediaPlayer" :accessToken="accessToken"/>
-
+    <MediaPlayer v-if="!$store.state.isSettingsActive" ref="mediaPlayerComponent" :podcast="podcast" :audio-preview-url="audioPreviewUrl" :audio-player="audioElement" @remove-media-player="hideMediaPlayer" :accessToken="accessToken"/>
    
 
   </div>
@@ -87,7 +90,7 @@ export default {
       this.searchQuery = "";
     },
     toggleSidebar() {
-      this.showSidebar = !this.showSidebar;
+      this.$store.commit('TOGGLE_SIDEBAR');
     },
     setPreviewUrl(url, podcast) {
       this.audioPreviewUrl = url;
