@@ -5,8 +5,16 @@ export default createStore({
     currentPlayingTrack: null,
     audioPlayer: new Audio(),
     isPlaying: false,
+    isSettingsActive: false,
+    showSidebar: false,
   },
   mutations: {
+    TOGGLE_SIDEBAR(state) {
+      state.showSidebar = !state.showSidebar;
+    },
+    SET_SETTINGS_ACTIVE(state, value) {
+      state.isSettingsActive = value;
+    },
     setCurrentPlayingTrack(state, track) {
       state.currentPlayingTrack = track;
     },
