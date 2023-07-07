@@ -1,7 +1,16 @@
 <template>
   <div class="media-player-wrapper">
-    <div class="media-player-container" :class="{ 'mini-media-player': mini, 'changed-background-color': changedBackgroundColor }" @click.stop="handleContainerClick">
-      <div class="media-player" :class="{ 'reduced-size': mini }" :style="mediaPlayerStyle">
+    <div 
+      class="media-player-container" 
+      :class="[mini ? 'mini-media-player' : '', theme]"
+      @click.stop="handleContainerClick"
+    >
+    <div 
+    class="media-player" 
+    :class="[mini ? 'reduced-size' : '', theme]"
+    :style="mediaPlayerStyle"
+>
+
         <div v-if="podcast">
           <div class="now-playing">
             <h2>
@@ -68,10 +77,20 @@ import { mapState } from 'vuex';
       },
     },
     computed: {
-      ...mapState(['audioPlayer']),
-    mediaPlayerStyle() {
-      if (this.mini) {
-        return {
+      ...mapState(['audioPlayer', 'theme']),
+      mediaPlayerStyle() {
+    let baseStyle = {
+        position: this.fullscreen ? 'fixed' : 'static',
+        top: this.fullscreen ? '0' : 'auto',
+        left: this.fullscreen ? '0' : 'auto',
+        width: this.fullscreen ? '100%' : 'auto',
+        height: this.fullscreen ? '100%' : 'auto',
+        zIndex: this.fullscreen ? '9999' : 'auto',
+    };
+    
+    if (this.mini) {
+        baseStyle = {
+          ...baseStyle,
           position: 'static',
           top: 'auto',
           left: 'auto',
@@ -80,20 +99,19 @@ import { mapState } from 'vuex';
           background: 'transparent',
           zIndex: 'auto',
         };
-      } else {
-        return {
-          position: this.fullscreen ? 'fixed' : 'static',
-          top: this.fullscreen ? '0' : 'auto',
-          left: this.fullscreen ? '0' : 'auto',
-          width: this.fullscreen ? '100%' : 'auto',
-          height: this.fullscreen ? '100%' : 'auto',
-          background: this.fullscreen
-            ? 'linear-gradient(180deg, #333333 0%, #222222 50%, #111111 100%)'
-            : 'transparent',
-          zIndex: this.fullscreen ? '9999' : 'auto',
-        };
-      }
-    },
+    }
+    else {
+        if (this.theme === 'light') {
+            baseStyle.background = '#d1d1be';
+        } else {
+            baseStyle.background = this.fullscreen
+                ? 'linear-gradient(180deg, #333333 0%, #222222 50%, #111111 100%)'
+                : 'transparent';
+        }
+    }
+    return baseStyle;
+},
+
   },
     data() {
       return {
@@ -103,7 +121,6 @@ import { mapState } from 'vuex';
         previewDuration: 30,
         fullscreen: false,
         mini: false,
-        changedBackgroundColor: false,
       };
     },
     methods: {
@@ -219,6 +236,43 @@ toggleFullscreen() {
   </script>
 
 <style scoped>
+
+.media-player.light-theme {
+    background-color: #d1d1be;
+    color: #000000;
+  }
+  
+  .media-player.light-theme h3 {
+    color: #000000;
+  }
+  
+  .media-player-container.mini-media-player.light-theme {
+    background-color: #d1d1be;
+    color: #000000;
+  }
+
+  .media-player.light-theme,
+.media-player-container.mini-media-player .media-player.light-theme {
+    background-color: #d1d1be;
+    color: #000000;
+}
+
+
+  /* Styles for dark theme */
+  .media-player.dark-theme {
+    background-color: #222;
+    color: #fff;
+  }
+  
+  .media-player.dark-theme h3 {
+    color: #fff;
+  }
+  
+  .media-player-container.mini-media-player.dark-theme {
+    background-color: #222;
+    color: #fff;
+  }
+
 .media-player {
   display: flex;
   position: absolute;;
@@ -265,8 +319,8 @@ toggleFullscreen() {
   width: 50px;
 }
 .media-player-container.mini-media-player {
-  background-color: #f4f3f3;
-  color: black;
+  background-color: #222;
+  color: white;
   width: 90%;
   border-radius: 10px;
 }
