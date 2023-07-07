@@ -22,9 +22,11 @@ export default createStore({
     setCurrentPlayingTrack(state, track) {
       state.currentPlayingTrack = track;
     },
-    async setAudioPlayerSource({ commit }, source) {
-      commit('setAudioPlayerSource', source);
+    setAudioPlayerSource(state, source) {
+      state.audioPlayer.src = source;
     },
+    
+    
     setPlayingState(state, playing) {
       state.isPlaying = playing;
     },
