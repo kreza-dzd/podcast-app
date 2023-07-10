@@ -2,12 +2,12 @@
   <div class="media-player-wrapper">
     <div 
       class="media-player-container" 
-      :class="[mini ? 'mini-media-player' : '', theme]"
+      :class="[mini ? 'mini-media-player' : '', themeClass]"
       @click.stop="handleContainerClick"
     >
     <div 
     class="media-player" 
-    :class="[mini ? 'reduced-size' : '', theme]"
+    :class="[mini ? 'reduced-size' : '', themeClass]"
     :style="mediaPlayerStyle"
 >
 
@@ -77,6 +77,10 @@ import { mapState } from 'vuex';
       },
     },
     computed: {
+        themeClass() {
+    return `${this.theme}-theme`;
+  },
+
       ...mapState(['audioPlayer', 'theme']),
       mediaPlayerStyle() {
     let baseStyle = {
