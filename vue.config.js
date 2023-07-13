@@ -3,6 +3,6 @@ module.exports = {
     historyApiFallback: true,
   },
   transpileDependencies: true,
-  publicPath: process.env.NODE_ENV === "production" ? "/podcast-app/" : "/",
+  publicPath: process.env.NODE_ENV === "production" ? "//" : "/",
 };
 
