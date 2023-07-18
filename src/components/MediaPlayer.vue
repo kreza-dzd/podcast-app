@@ -1,5 +1,5 @@
 <template>
-  <div class="media-player-wrapper">
+   <div class="media-player-wrapper" v-if="showMediaPlayer">
     <div 
       class="media-player-container" 
       :class="[mini ? 'mini-media-player' : '', themeClass]"
@@ -58,7 +58,11 @@ import { mapState } from 'vuex';
 
   export default {
     props: {
-    
+      showMediaPlayer: {
+      type: Boolean,
+      required: true,
+      default: true,
+    },
     
       podcast: {
         type: Object,
