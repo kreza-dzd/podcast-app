@@ -27,24 +27,13 @@
     <div class="sidebar" :class="{ active: $store.state.showSidebar }" v-if="!$store.state.isSettingsActive">
       <nav>
         <ul>
-        <li>
-          <router-link to="/music" @click="toggleSidebar">
-             <font-awesome-icon :icon="['fas', 'music']" /> Music
-         </router-link>
-        </li>
-        <li>
-          <router-link to="/music" @click="toggleSidebar">
-              <a href="#"><font-awesome-icon :icon="['fas', 'podcast']" /> Podcasts</a>
-        </router-link>
-        </li>
-        <li>
-          <a href="#"><font-awesome-icon icon="book" /> Library</a>
-        </li>
-        <li>
-       <router-link to="/settings">
-         <font-awesome-icon icon="user" /> Settings
-       </router-link>
-        </li>
+     <li>
+      <label for="theme">Theme:</label>
+      <select id="theme" v-model="$store.state.theme">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </li>
 
 
       </ul>
@@ -54,7 +43,7 @@
       <router-view @play="handlePlay" @toggleFullscreen="toggleFullscreen"></router-view>
 
     </main>
-    <MediaPlayer v-if="!$store.state.isSettingsActive" ref="mediaPlayerComponent" :podcast="podcast" :audio-preview-url="audioPreviewUrl" :audio-player="audioElement" @remove-media-player="hideMediaPlayer" :accessToken="accessToken"/>
+    <MediaPlayer :showMediaPlayer="true" v-if="!$store.state.isSettingsActive" ref="mediaPlayerComponent" :podcast="podcast" :audio-preview-url="audioPreviewUrl" :audio-player="audioElement" @remove-media-player="hideMediaPlayer" :accessToken="accessToken"/>
    
 
   </div>
@@ -127,6 +116,15 @@ export default {
       this.setPreviewUrl(previewUrl, null);
     },
   },
+  watch: {
+  "$store.state.theme": {
+    handler(newTheme) {
+      this.$store.commit('setTheme', newTheme);
+    },
+    immediate: true, // to handle initial value
+  }
+}
+
 };
 </script>
 
@@ -202,4 +200,3 @@ header {
   color: inherit;
 }
 </style>
-
