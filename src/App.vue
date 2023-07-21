@@ -13,7 +13,7 @@
         </h1>
         </router-link>
         <div class="user-profile">
-          <img src="./assets/CD.jpg" alt="User Profile" />
+          <img src="./assets/CD2.jpg" alt="User Profile" />
         </div>
        <div class="search-container">
       <input type="text" placeholder="" v-model="searchQuery" @keyup.enter="requestTracks"/>
