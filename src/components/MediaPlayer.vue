@@ -28,14 +28,14 @@
             <span class="duration">{{ formatDuration(duration, true) }}</span>
           </div>
           <div class="button-container">
-            <button class="button fullscreen-only" @click="previous">
+            <button class="button fullscreen-only" @click="slowDown">
               <font-awesome-icon :icon="['fas', 'fa-backward']" />
             </button>
             <button class="button play-pause" @click="togglePlay">
-  <font-awesome-icon :icon="['fas', isPlaying ? 'fa-pause' : 'fa-play']" />
-</button>
+           <font-awesome-icon :icon="['fas', isPlaying ? 'fa-pause' : 'fa-play']" />
+            </button>
 
-            <button class="button fullscreen-only" @click="next">
+            <button class="button fullscreen-only" @click="speedUp">
               <font-awesome-icon :icon="['fas', 'fa-forward']" />
             </button>
             <button v-if="!mini" class="button-remove" @click.stop="handleButtonRemoveClick">
@@ -132,6 +132,20 @@ import { mapState } from 'vuex';
       };
     },
     methods: {
+      speedUp() {
+  if (this.$refs.audio.currentTime < this.$refs.audio.duration - 15) {
+    this.$refs.audio.currentTime += 15;
+  } else {
+    this.$refs.audio.currentTime = this.$refs.audio.duration;
+  }
+},
+  slowDown() {
+    if (this.$refs.audio.currentTime > 15) {
+    this.$refs.audio.currentTime -= 15;
+    } else {
+     this.$refs.audio.currentTime = 0;
+    }
+},
       handleContainerClick() {
   if (this.mini) {
     this.removeMediaPlayer();
