@@ -25,20 +25,23 @@
       </div>
     </header>
     <div class="sidebar" :class="{ active: $store.state.showSidebar }" v-if="!$store.state.isSettingsActive">
-      <nav>
-        <ul>
-     <li>
-      <label for="theme">Theme:</label>
-      <select id="theme" v-model="$store.state.theme">
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-      </select>
-    </li>
+  <nav>
+    <ul>
+      <li>
+        <div class="theme-switcher">
+          <span>Light</span>
+          <label class="switch">
+            <input type="checkbox" id="theme" :checked="$store.state.theme === 'dark'" @change="$store.commit('setTheme', $event.target.checked ? 'dark' : 'light')">
+            <span class="slider round"></span>
+          </label>
+          <span>Dark</span>
+        </div>
+      </li>
+    </ul>
+  </nav>
+</div>
+<div class="overlay" :class="{ active: $store.state.showSidebar }" @click="toggleSidebar"></div>
 
-
-      </ul>
-      </nav>
-    </div>
     <main>
       <router-view @play="handlePlay" @toggleFullscreen="toggleFullscreen"></router-view>
 
@@ -116,14 +119,6 @@ export default {
       this.setPreviewUrl(previewUrl, null);
     },
   },
-  watch: {
-  "$store.state.theme": {
-    handler(newTheme) {
-      this.$store.commit('setTheme', newTheme);
-    },
-    immediate: true, // to handle initial value
-  }
-}
 
 };
 </script>
@@ -133,6 +128,102 @@ export default {
   background-color:  rgb(70, 71, 70);
   color: #F5F5DC;
 }
+
+.sidebar {
+  position: fixed;
+  width: 250px;
+  max-width: 80%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  padding: 20px;
+  background: dimgray;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.25);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-out;
+}
+
+
+.sidebar.active {
+  transform: translateX(0);
+}
+
+.overlay {
+  pointer-events: none;
+}
+
+.overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Theme switcher styles */
+.theme-switcher {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* Sidebar background color for dark theme */
+.dark-theme .sidebar {
+  background: #1a1a2e;
+  color: #E5E5E5;
+}
+
+/* Sidebar background color for light theme */
+.light-theme .sidebar {
+  background: #F5F5DC;
+  color: #000000;
+}
+
 
 .light-theme, .light-theme header, .light-theme main {
   background-color: #F5F5DC;
@@ -148,7 +239,9 @@ export default {
   color: #F5F5DC;
 }
 
-
+.dark-theme .menu-line {
+  background-color: #E5E5E5; /* white */
+}
 
 body {
   background-color:  rgb(70, 71, 70);
