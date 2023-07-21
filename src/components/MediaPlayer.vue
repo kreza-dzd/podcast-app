@@ -29,14 +29,14 @@
           </div>
           <div class="button-container">
             <button class="button fullscreen-only" @click="slowDown">
-              <font-awesome-icon :icon="['fas', 'fa-backward']" />
+              <font-awesome-icon :icon="['fas', 'arrow-rotate-left']" />
             </button>
             <button class="button play-pause" @click="togglePlay">
            <font-awesome-icon :icon="['fas', isPlaying ? 'fa-pause' : 'fa-play']" />
             </button>
 
             <button class="button fullscreen-only" @click="speedUp">
-              <font-awesome-icon :icon="['fas', 'fa-forward']" />
+              <font-awesome-icon :icon="['fas', 'arrow-rotate-right']" />
             </button>
             <button v-if="!mini" class="button-remove" @click.stop="handleButtonRemoveClick">
               <font-awesome-icon :icon="['fas', 'chevron-down']" />
