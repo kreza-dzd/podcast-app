@@ -22,6 +22,7 @@
 import { ref, onMounted,defineEmits } from 'vue';
 import axios from 'axios';
 import { useStore } from 'vuex';
+import { watch } from 'vue';
 
 const featuredTracks = ref([]);
 const store = useStore();
@@ -89,23 +90,37 @@ const playPreview = (track) => {
     image: track.album.images[0]?.url,
     audioPreviewUrl: track.preview_url,
   };
+
+  if (store.state.currentPlayingTrack?.id !== track.id) {
+    store.dispatch('playNewTrack', transformedItem);
+  } else {
+    // If the same track is clicked, you might want to pause or do nothing
+  }
+
   emit('play', track);
   store.commit('setAudioPlayerSource', track.preview_url);
   
   // commit the current playing track
   store.commit('setCurrentPlayingTrack', transformedItem);
 
-  // dispatch the playNewTrack action
-  store.dispatch('playNewTrack', track.preview_url);
+  // dispatch the playNewTrack action with the correct variable
+  store.dispatch('playNewTrack', transformedItem);
 
   toggleFullscreen();
 };
 
 
 
+
 const toggleFullscreen = () => {
   emit('toggleFullscreen');
 };
+
+watch(() => store.state.currentPlayingTrack, (newTrack) => {
+  if (newTrack && newTrack.id !== featuredTracks.value.id) {
+    // Logic to stop playback for the old track
+  }
+});
 </script>
 
 <style scoped>
